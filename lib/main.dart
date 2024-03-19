@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:waterloo/app/screens/login.dart';
+import 'package:waterloo/app/screens/sign_in.dart';
 import 'app/screens/get_started.dart';
 
 void main() {
@@ -13,8 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme()),
-      home: Login(),
+      home: GetStarted(),
     );
   }
 }

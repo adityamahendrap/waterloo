@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:waterloo/app/screens/login.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:waterloo/app/screens/sign_in.dart';
+import 'package:waterloo/app/screens/sign_up.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
 import '../widgets/oauth_button.dart';
 import '../widgets/full_width_button.dart';
@@ -10,9 +12,10 @@ class GetStarted extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme()),
       home: Scaffold(
         body: ListView(
-          padding: EdgeInsets.fromLTRB(20, 50, 20, 20),
+          padding: EdgeInsets.fromLTRB(20, 100, 20, 20),
           children: [
             Center(
               child: Column(
@@ -36,7 +39,14 @@ class GetStarted extends StatelessWidget {
                   FullWidthButton(
                     type: FullWidthButtonType.primary,
                     text: "Sign Up",
-                    onPressed: () => {},
+                    onPressed: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignUp(),
+                        ),
+                      )
+                    },
                   ),
                   SizedBox(height: 15),
                   FullWidthButton(
@@ -46,7 +56,7 @@ class GetStarted extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const Login(),
+                          builder: (context) => const SignIn(),
                         ),
                       )
                     },
