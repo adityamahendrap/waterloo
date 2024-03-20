@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:waterloo/app/screens/get_started.dart';
+import 'package:waterloo/app/screens/sign_up.dart';
+import 'package:waterloo/app/utils/navigator_util.dart';
 import 'package:waterloo/app/widgets/full_width_button.dart';
 import 'package:waterloo/app/widgets/horizontal_divider.dart';
 import 'package:waterloo/app/widgets/oauth_button.dart';
@@ -134,7 +136,9 @@ class SignIn extends StatelessWidget {
                   children: [
                     Text("Doesn't have an account? "),
                     TextButton(
-                      onPressed: () => {},
+                      onPressed: () => {
+                        NavigatorUtil.push(context, const SignUp(), true),
+                      },
                       child: Text(
                         "Sign Up",
                         style: TextStyle(
