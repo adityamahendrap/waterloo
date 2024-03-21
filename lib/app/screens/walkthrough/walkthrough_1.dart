@@ -1,13 +1,9 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:waterloo/app/screens/get_started.dart';
 import 'package:waterloo/app/screens/walkthrough/walkthrough_2.dart';
-import 'package:waterloo/app/utils/navigator_util.dart';
-import 'package:waterloo/app/widgets/full_width_button.dart';
-import 'package:waterloo/app/widgets/horizontal_divider.dart';
-import 'package:waterloo/app/widgets/oauth_button.dart';
-import 'package:waterloo/app/widgets/text_title.dart';
 
 class Walkthrough1 extends StatelessWidget {
   const Walkthrough1({Key? key}) : super(key: key);
@@ -78,7 +74,7 @@ class Walkthrough1 extends StatelessWidget {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          NavigatorUtil.push(context, const GetStarted(), true);
+                          Get.off(GetStarted());
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 15),
@@ -101,8 +97,7 @@ class Walkthrough1 extends StatelessWidget {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          NavigatorUtil.push(
-                              context, const Walkthrough2(), false);
+                          Get.to(Walkthrough2());
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 15),

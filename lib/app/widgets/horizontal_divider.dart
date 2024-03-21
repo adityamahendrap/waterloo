@@ -10,6 +10,7 @@ class HorizontalDivider extends StatelessWidget {
     return Row(children: [
       Expanded(
         child: Divider(
+          indent: 0,
           endIndent: 10.0,
           thickness: 1,
         ),
@@ -17,7 +18,8 @@ class HorizontalDivider extends StatelessWidget {
       Text(this.text),
       Expanded(
         child: Divider(
-          endIndent: 10.0,
+          indent: 10.0,
+          endIndent: 0,
           thickness: 1,
         ),
       ),

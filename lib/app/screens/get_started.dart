@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:waterloo/app/screens/sign_in.dart';
 import 'package:waterloo/app/screens/sign_up.dart';
@@ -39,26 +40,16 @@ class GetStarted extends StatelessWidget {
                   FullWidthButton(
                     type: FullWidthButtonType.primary,
                     text: "Sign Up",
-                    onPressed: () => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SignUp(),
-                        ),
-                      )
+                    onPressed: () {
+                      Get.to(SignUp());
                     },
                   ),
                   SizedBox(height: 15),
                   FullWidthButton(
                     type: FullWidthButtonType.secondary,
                     text: "Sign In",
-                    onPressed: () => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SignIn(),
-                        ),
-                      )
+                    onPressed: () {
+                      Get.to(SignIn());
                     },
                   ),
                   SizedBox(height: 50),
@@ -66,14 +57,14 @@ class GetStarted extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TextButton(
-                        onPressed: () => {},
+                        onPressed: () {},
                         child: Text(
                           "Privacy Policy",
                           style: TextStyle(color: Colors.grey),
                         ),
                       ),
                       TextButton(
-                        onPressed: () => {},
+                        onPressed: () {},
                         child: Text(
                           "Term of Service",
                           style: TextStyle(color: Colors.grey),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:waterloo/app/screens/get_started.dart';
+import 'package:waterloo/app/screens/forgot_password/send_otp_code.dart';
 import 'package:waterloo/app/screens/sign_up.dart';
-import 'package:waterloo/app/utils/navigator_util.dart';
-import 'package:waterloo/app/widgets/full_width_button.dart';
+import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
 import 'package:waterloo/app/widgets/horizontal_divider.dart';
 import 'package:waterloo/app/widgets/oauth_button.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
@@ -22,13 +22,8 @@ class SignIn extends StatelessWidget {
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const GetStarted(),
-                ),
-              )
+            onPressed: () {
+              Get.back();
             },
           ),
         ),
@@ -94,7 +89,7 @@ class SignIn extends StatelessWidget {
                         Icons.visibility_off_outlined,
                         color: Colors.black,
                       ),
-                      onPressed: () => {},
+                      onPressed: () {},
                     ),
                     focusedBorder: InputBorder.none,
                     enabledBorder: InputBorder.none,
@@ -114,7 +109,7 @@ class SignIn extends StatelessWidget {
                           width: 24,
                           child: Checkbox(
                             value: true,
-                            onChanged: (value) => {},
+                            onChanged: (value) {},
                           ),
                         ),
                         SizedBox(width: 10),
@@ -122,7 +117,9 @@ class SignIn extends StatelessWidget {
                       ],
                     ),
                     TextButton(
-                      onPressed: () => {},
+                      onPressed: () {
+                        Get.to(SendOtpCode());
+                      },
                       child: Text(
                         "Forgot Password?",
                         style: TextStyle(fontWeight: FontWeight.bold),
@@ -130,14 +127,14 @@ class SignIn extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Doesn't have an account? "),
+                    Text("Doesn't have an account?"),
                     TextButton(
-                      onPressed: () => {
-                        NavigatorUtil.push(context, const SignUp(), true),
+                      onPressed: () {
+                        Get.off(SignUp());
                       },
                       child: Text(
                         "Sign Up",
@@ -147,7 +144,7 @@ class SignIn extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 25),
+                SizedBox(height: 10),
                 HorizontalDivider(text: "or"),
                 SizedBox(height: 25),
                 OauthButton(
@@ -162,37 +159,14 @@ class SignIn extends StatelessWidget {
                 SizedBox(height: 100),
               ],
             ),
-            bottomBar(context),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Positioned bottomBar(BuildContext context) {
-    return Positioned(
-      child: Container(
-        color: Colors.white,
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          children: [
-            Divider(
-              height: 0,
-              thickness: 0.5,
-              color: Colors.black,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: FullWidthButton(
-                type: FullWidthButtonType.primary,
-                text: "Sign In",
-                onPressed: () => {},
-              ),
+            FullWidthButtonBottomBar(
+              context: context,
+              text: "Sign Up",
+              onPressed: () {},
             ),
           ],
         ),
       ),
-      bottom: 0,
     );
   }
 }

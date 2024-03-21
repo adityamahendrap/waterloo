@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:waterloo/app/screens/forgot_password/success.dart';
 import 'package:waterloo/app/screens/sign_in.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
 import 'package:waterloo/app/widgets/horizontal_divider.dart';
 import 'package:waterloo/app/widgets/oauth_button.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
 
-class SignUp extends StatelessWidget {
-  const SignUp({Key? key}) : super(key: key);
+class NewPassword extends StatelessWidget {
+  const NewPassword({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,40 +32,13 @@ class SignUp extends StatelessWidget {
             ListView(
               padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
               children: [
-                TextTitle(title: "Join Waterloo Today!✨"),
+                TextTitle(title: "Secure your account 🔒"),
                 SizedBox(height: 10),
                 Text(
-                    "Create an account to track your water intake, set reminders, and unlock achievements"),
+                    "Choose a new password for your Waterloo account. Make sure it's strong and memorable."),
                 SizedBox(height: 25),
                 Text(
-                  "Email",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-                TextField(
-                  textAlignVertical: TextAlignVertical.center,
-                  obscureText: false,
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.email_outlined,
-                      color: Colors.black,
-                    ),
-                    hintText: 'Email',
-                    hintStyle: TextStyle(color: Color(0xff9E9E9E)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    filled: true,
-                    fillColor: Color.fromARGB(101, 241, 241, 241),
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                  ),
-                ),
-                SizedBox(height: 20),
-                Text(
-                  "Password",
+                  "New Password",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 10),
@@ -76,7 +50,7 @@ class SignUp extends StatelessWidget {
                       Icons.lock_outline,
                       color: Colors.black,
                     ),
-                    hintText: 'Password',
+                    hintText: 'New Password',
                     hintStyle: TextStyle(color: Color(0xff9E9E9E)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15.0),
@@ -98,7 +72,7 @@ class SignUp extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  "Confirm Password",
+                  "Confirm New Password",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 10),
@@ -110,7 +84,7 @@ class SignUp extends StatelessWidget {
                       Icons.lock_outline,
                       color: Colors.black,
                     ),
-                    hintText: "Confirm Password",
+                    hintText: "Confirm New Password",
                     hintStyle: TextStyle(color: Color(0xff9E9E9E)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15.0),
@@ -129,69 +103,16 @@ class SignUp extends StatelessWidget {
                     errorBorder: InputBorder.none,
                     disabledBorder: InputBorder.none,
                   ),
-                ),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: Checkbox(
-                        value: true,
-                        onChanged: (value) {},
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Text("I agree to Waterloo"),
-                    TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Terms & Conditions.",
-                        style: TextStyle(
-                            color: Colors.blue, fontWeight: FontWeight.bold),
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Already have an account? "),
-                    TextButton(
-                      onPressed: () {
-                        Get.off(SignIn());
-                      },
-                      child: Text(
-                        "Sign In",
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(height: 10),
-                HorizontalDivider(text: "or"),
-                SizedBox(height: 25),
-                OauthButton(
-                  iconPath: "assets/google_icon.png",
-                  text: "Continue with Google",
-                ),
-                SizedBox(height: 15),
-                OauthButton(
-                  iconPath: "assets/facebook_icon.png",
-                  text: "Continue with Facebook",
                 ),
                 SizedBox(height: 100),
               ],
             ),
             FullWidthButtonBottomBar(
               context: context,
-              text: "Sign Up",
-              onPressed: () {},
+              text: "Save New Password",
+              onPressed: () {
+                Get.offAll(Success());
+              },
             ),
           ],
         ),
