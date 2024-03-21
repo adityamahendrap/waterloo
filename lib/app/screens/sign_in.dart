@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:waterloo/app/screens/forgot_password/send_otp_code.dart';
+import 'package:waterloo/app/screens/personalization/1_gender.dart';
 import 'package:waterloo/app/screens/sign_up.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
 import 'package:waterloo/app/widgets/horizontal_divider.dart';
@@ -161,8 +162,10 @@ class SignIn extends StatelessWidget {
             ),
             FullWidthButtonBottomBar(
               context: context,
-              text: "Sign Up",
-              onPressed: () {},
+              text: "Sign In",
+              onPressed: () {
+                Get.offAll(GenderPersonalization());
+              },
             ),
           ],
         ),

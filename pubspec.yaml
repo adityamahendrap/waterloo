@@ -38,6 +38,7 @@ dependencies:
   google_fonts: ^4.0.4
   dots_indicator: ^3.0.0
   get:
+  percent_indicator: ^4.2.3
 
 dev_dependencies:
   flutter_test:

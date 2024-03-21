@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app/screens/get_started.dart';
+import 'app/widgets/list_wheel_scroll.dart';
 import 'package:get/get.dart';
 
 void main() {
@@ -13,6 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
+      // home: GetStarted(),
       home: GetStarted(),
     );
   }
