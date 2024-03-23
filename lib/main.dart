@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'app/screens/get_started.dart';
-import 'app/widgets/list_wheel_scroll.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
+import 'package:waterloo/app/screens/get_started.dart';
+import 'package:waterloo/app/screens/personalization/1_gender.dart';
+import 'package:waterloo/app/screens/splash.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,8 +16,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: GetStarted(),
-      home: GetStarted(),
+      theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme()),
+      home: GenderPersonalization(),
     );
   }
 }

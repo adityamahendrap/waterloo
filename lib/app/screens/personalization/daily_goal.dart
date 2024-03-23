@@ -12,74 +12,71 @@ class DailyGoal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme()),
-      home: Scaffold(
-        body: Stack(
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Center(
-                  child: TextTitle(
-                    title: "Your daily goal is",
-                  ),
+    return Scaffold(
+      body: Stack(
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: TextTitle(
+                  title: "Your daily goal is",
                 ),
-                SizedBox(height: 50),
-                Image.asset("assets/water_result.png"),
-                SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "2400",
-                      style: TextStyle(
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Text(
-                        " mL",
-                        style: TextStyle(
-                          fontSize: 30,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 30),
-                OutlinedButton.icon(
-                  onPressed: () {},
-                  icon: SizedBox(
-                    height: 24,
-                    child: Icon(Icons.adjust_outlined),
-                  ),
-                  label: Text(
-                    "Adjust",
+              ),
+              SizedBox(height: 50),
+              Image.asset("assets/water_result.png"),
+              SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "2400",
                     style: TextStyle(
-                      color: Colors.black,
+                      fontSize: 50,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(0, 50),
-                    shape: StadiumBorder(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Text(
+                      " mL",
+                      style: TextStyle(
+                        fontSize: 30,
+                      ),
+                    ),
                   ),
-                )
-              ],
-            ),
-            FullWidthButtonBottomBar(
-              context: context,
-              text: "Let's Hydrate",
-              onPressed: () {
-                Get.offAll(Home());
-              },
-            )
-          ],
-        ),
+                ],
+              ),
+              SizedBox(height: 30),
+              OutlinedButton.icon(
+                onPressed: () {},
+                icon: SizedBox(
+                  height: 24,
+                  child: Icon(Icons.adjust_outlined),
+                ),
+                label: Text(
+                  "Adjust",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(0, 50),
+                  shape: StadiumBorder(),
+                ),
+              )
+            ],
+          ),
+          FullWidthButtonBottomBar(
+            context: context,
+            text: "Let's Hydrate",
+            onPressed: () {
+              Get.offAll(Home());
+            },
+          )
+        ],
       ),
     );
   }

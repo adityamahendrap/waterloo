@@ -5,6 +5,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:waterloo/app/screens/forgot_password/enter_otp_code.dart';
 import 'package:waterloo/app/screens/personalization/daily_goal.dart';
 import 'package:waterloo/app/screens/sign_up.dart';
+import 'package:waterloo/app/widgets/appbar_personalization.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
 import 'package:waterloo/app/widgets/horizontal_divider.dart';
 import 'package:waterloo/app/widgets/oauth_button.dart';
@@ -38,88 +39,55 @@ class WeatherPersonalizationState extends State<WeatherPersonalization> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme()),
-      home: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () {
-              Get.back();
-            },
-          ),
-          title: Expanded(
-            child: new LinearPercentIndicator(
-              lineHeight: 10,
-              percent: 8 / 8,
-              progressColor: Colors.blue,
-              barRadius: Radius.circular(100),
-              backgroundColor: Colors.grey[300],
-            ),
-          ),
-          actions: [
-            Row(
-              children: [
-                SizedBox(width: 10),
-                Text(
-                  "8 / 8",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBarPersonalization(step: 8),
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              SingleChildScrollView(
+                padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
+                child: Column(children: [
+                  Center(
+                    child: TextTitle(
+                      title: "What's the climate / weather like in your area?",
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                ),
-                SizedBox(width: 20),
-              ],
-            )
-          ],
-        ),
-        body: Stack(
-          children: [
-            ListView(
-              padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
-              children: [
-                Center(
-                  child: TextTitle(
-                    title: "What's the climate / weather like in your area?",
+                  SizedBox(height: 10),
+                  Text(
+                    "External factor like weather can influence your hydration needs. Let's us know the current climate in your area.",
                     textAlign: TextAlign.center,
                   ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  "External factor like weather can influence your hydration needs. Let's us know the current climate in your area.",
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 40),
-                Column(
-                  children: activityLevels.map((item) {
-                    return Column(
-                      children: [
-                        ChoiceButton(
-                          iconPath: item['iconPath'],
-                          primaryText: item['primaryText'],
-                          isSelected: item['isSelected'],
-                        ),
-                        SizedBox(height: 20)
-                      ],
-                    );
-                  }).toList(),
-                ),
-                SizedBox(height: 100),
-              ],
-            ),
-            FullWidthButtonBottomBar(
-              context: context,
-              text: "Finish",
-              onPressed: () {
-                Get.offAll(DailyGoal());
-              },
-            ),
-          ],
-        ),
+                  SizedBox(height: 40),
+                  Column(
+                    children: activityLevels.map((item) {
+                      return Column(
+                        children: [
+                          ChoiceButton(
+                            iconPath: item['iconPath'],
+                            primaryText: item['primaryText'],
+                            isSelected: item['isSelected'],
+                          ),
+                          SizedBox(height: 20)
+                        ],
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(height: 100),
+                ]),
+              ),
+            ],
+          ),
+          FullWidthButtonBottomBar(
+            context: context,
+            text: "Finish",
+            onPressed: () {
+              Get.offAll(DailyGoal());
+            },
+          ),
+        ],
       ),
     );
   }
