@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:waterloo/app/controllers/personalization_controller.dart';
 import 'package:waterloo/app/screens/forgot_password/enter_otp_code.dart';
 import 'package:waterloo/app/screens/personalization/daily_goal.dart';
 import 'package:waterloo/app/screens/sign_up.dart';
@@ -11,29 +12,22 @@ import 'package:waterloo/app/widgets/horizontal_divider.dart';
 import 'package:waterloo/app/widgets/oauth_button.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
 
-class WeatherPersonalization extends StatefulWidget {
-  const WeatherPersonalization({Key? key}) : super(key: key);
+class WeatherPersonalization extends StatelessWidget {
+  WeatherPersonalization({super.key});
 
-  @override
-  State<WeatherPersonalization> createState() => WeatherPersonalizationState();
-}
-
-class WeatherPersonalizationState extends State<WeatherPersonalization> {
+  final personalizationC = Get.find<PersonalizationController>();
   List<Map<String, dynamic>> activityLevels = [
     {
-      "iconPath": "assets/google_icon.png",
-      "primaryText": "Hot",
-      "isSelected": false
+      "iconPath": "https://cdn-icons-png.flaticon.com/128/2698/2698194.png",
+      "primaryText": Weather.HOT,
     },
     {
-      "iconPath": "assets/google_icon.png",
-      "primaryText": "Temperate",
-      "isSelected": true
+      "iconPath": "https://cdn-icons-png.flaticon.com/128/2698/2698213.png",
+      "primaryText": Weather.TEMPERATE,
     },
     {
-      "iconPath": "assets/google_icon.png",
-      "primaryText": "Cold",
-      "isSelected": false
+      "iconPath": "https://cdn-icons-png.flaticon.com/128/2273/2273965.png",
+      "primaryText": Weather.COLD,
     },
   ];
 
@@ -68,7 +62,10 @@ class WeatherPersonalizationState extends State<WeatherPersonalization> {
                           ChoiceButton(
                             iconPath: item['iconPath'],
                             primaryText: item['primaryText'],
-                            isSelected: item['isSelected'],
+                            selectedItem: personalizationC.weather,
+                            onPressed: () {
+                              personalizationC.setWeather(item['primaryText']);
+                            },
                           ),
                           SizedBox(height: 20)
                         ],
@@ -84,6 +81,8 @@ class WeatherPersonalizationState extends State<WeatherPersonalization> {
             context: context,
             text: "Finish",
             onPressed: () {
+              double result = personalizationC.calculateWaterIntake();
+              personalizationC.setDailyGoal(result);
               Get.offAll(DailyGoal());
             },
           ),
@@ -96,54 +95,64 @@ class WeatherPersonalizationState extends State<WeatherPersonalization> {
 class ChoiceButton extends StatelessWidget {
   final String iconPath;
   final String primaryText;
-  final bool isSelected;
+  final RxString selectedItem;
+  final void Function() onPressed;
 
-  const ChoiceButton({
-    Key? key,
-    required this.iconPath,
-    required this.primaryText,
-    required this.isSelected,
-  }) : super(key: key);
+  const ChoiceButton(
+      {Key? key,
+      required this.iconPath,
+      required this.primaryText,
+      required this.selectedItem,
+      required this.onPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton.icon(
-      onPressed: () {},
-      icon: SizedBox(
-        height: 24,
-        child: Image.asset(this.iconPath),
-      ),
-      label: Row(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    this.primaryText,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+    return Obx(
+      () => OutlinedButton.icon(
+        onPressed: () {
+          this.onPressed();
+        },
+        icon: SizedBox(
+          height: 40,
+          width: 40,
+          child: Image.network(this.iconPath),
+        ),
+        label: Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      this.primaryText,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-      style: OutlinedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          ],
         ),
-        side: BorderSide(
-          width: this.isSelected ? 2 : 0.5,
-          color: this.isSelected ? Colors.blue : Colors.grey,
+        style: OutlinedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          side: BorderSide(
+            width: this.selectedItem.value == this.primaryText ? 2 : 0.5,
+            color: this.selectedItem.value == this.primaryText
+                ? Colors.blue
+                : Colors.grey,
+          ),
         ),
       ),
     );

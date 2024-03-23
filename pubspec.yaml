@@ -41,6 +41,7 @@ dependencies:
   percent_indicator: ^4.2.3
   introduction_screen:
   lottie:
+  collection:
 
 dev_dependencies:
   flutter_test:

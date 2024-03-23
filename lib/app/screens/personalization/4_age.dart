@@ -1,25 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:percent_indicator/percent_indicator.dart';
-import 'package:waterloo/app/screens/forgot_password/enter_otp_code.dart';
-import 'package:waterloo/app/screens/personalization/2_tall.dart';
+import 'package:waterloo/app/controllers/personalization_controller.dart';
 import 'package:waterloo/app/screens/personalization/5_wake_up_time.dart';
-import 'package:waterloo/app/screens/sign_up.dart';
 import 'package:waterloo/app/widgets/appbar_personalization.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
-import 'package:waterloo/app/widgets/horizontal_divider.dart';
-import 'package:waterloo/app/widgets/oauth_button.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
+import 'package:waterloo/app/widgets/list_wheel_input.dart';
+import 'package:waterloo/app/widgets/list_wheel_input_stripe.dart';
 
-class AgePersonalization extends StatefulWidget {
-  const AgePersonalization({Key? key}) : super(key: key);
+class AgePersonalization extends StatelessWidget {
+  AgePersonalization({super.key});
 
-  @override
-  State<AgePersonalization> createState() => _AgePersonalizationState();
-}
+  final personalizationC = Get.find<PersonalizationController>();
+  final List<int> numbers = List<int>.generate(80, (index) => index + 6);
 
-class _AgePersonalizationState extends State<AgePersonalization> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +37,13 @@ class _AgePersonalizationState extends State<AgePersonalization> {
                   Stack(
                     alignment: Alignment.center,
                     children: [
-                      ListWheelInput(),
+                      ListWheelInput(
+                        items: numbers,
+                        selectedItem: personalizationC.age,
+                        onSelectedItemChanged: (index) {
+                          personalizationC.setAge(numbers[index]);
+                        },
+                      ),
                       ListWheelInputStripe(),
                       Container(
                         margin: EdgeInsets.only(left: 120, top: 12),

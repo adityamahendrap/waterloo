@@ -1,24 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:percent_indicator/percent_indicator.dart';
-import 'package:waterloo/app/screens/forgot_password/enter_otp_code.dart';
+import 'package:waterloo/app/controllers/personalization_controller.dart';
 import 'package:waterloo/app/screens/personalization/4_age.dart';
-import 'package:waterloo/app/screens/sign_up.dart';
 import 'package:waterloo/app/widgets/appbar_personalization.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
-import 'package:waterloo/app/widgets/horizontal_divider.dart';
-import 'package:waterloo/app/widgets/oauth_button.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
+import 'package:waterloo/app/widgets/list_wheel_input.dart';
+import 'package:waterloo/app/widgets/list_wheel_input_stripe.dart';
 
-class WeightPersonalization extends StatefulWidget {
-  const WeightPersonalization({Key? key}) : super(key: key);
+class WeightPersonalization extends StatelessWidget {
+  WeightPersonalization({super.key});
 
-  @override
-  State<WeightPersonalization> createState() => _WeightPersonalizationState();
-}
+  final personalizationC = Get.find<PersonalizationController>();
+  final List<int> numbers = List<int>.generate(150, (index) => index + 20);
 
-class _WeightPersonalizationState extends State<WeightPersonalization> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,14 +32,34 @@ class _WeightPersonalizationState extends State<WeightPersonalization> {
               ),
               SizedBox(height: 40),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
                     width: MediaQuery.of(context).size.width / 2 - 30,
                     child: Image.asset("assets/weight.png"),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width / 2 - 30,
-                    child: null,
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      ListWheelInputStripe(),
+                      Container(
+                        margin: EdgeInsets.only(left: 120, top: 12),
+                        child: Text(
+                          "kg",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width / 2 - 30,
+                        child: ListWheelInput(
+                          items: numbers,
+                          onSelectedItemChanged: (index) {
+                            personalizationC.setWeight(numbers[index]);
+                          },
+                          selectedItem: personalizationC.weight,
+                        ),
+                      ),
+                    ],
                   )
                 ],
               ),

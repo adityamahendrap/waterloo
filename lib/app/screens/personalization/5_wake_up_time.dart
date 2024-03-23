@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:percent_indicator/percent_indicator.dart';
-import 'package:waterloo/app/screens/forgot_password/enter_otp_code.dart';
-import 'package:waterloo/app/screens/personalization/2_tall.dart';
+import 'package:waterloo/app/controllers/personalization_controller.dart';
 import 'package:waterloo/app/screens/personalization/6_go_bed_time.dart';
-import 'package:waterloo/app/screens/sign_up.dart';
 import 'package:waterloo/app/widgets/appbar_personalization.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
-import 'package:waterloo/app/widgets/horizontal_divider.dart';
-import 'package:waterloo/app/widgets/oauth_button.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
+import 'package:waterloo/app/widgets/list_wheel_input.dart';
+import 'package:waterloo/app/widgets/list_wheel_input_stripe.dart';
 
-class WakeUpPersonalization extends StatefulWidget {
-  const WakeUpPersonalization({Key? key}) : super(key: key);
+class WakeUpPersonalization extends StatelessWidget {
+  WakeUpPersonalization({super.key});
 
-  @override
-  State<WakeUpPersonalization> createState() => WakeUpPersonalizationState();
-}
+  final personalizationC = Get.find<PersonalizationController>();
+  final List<int> hours = List<int>.generate(24, (index) => index);
+  final List<int> minutes = List<int>.generate(60, (index) => index);
 
-class WakeUpPersonalizationState extends State<WakeUpPersonalization> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,14 +37,41 @@ class WakeUpPersonalizationState extends State<WakeUpPersonalization> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 20),
-              Stack(
-                alignment: Alignment.center,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ListWheelInput(),
-                  ListWheelInputStripe(),
-                  Container(
-                    margin: EdgeInsets.only(left: 120, top: 12),
-                    child: Text("cm", style: TextStyle(fontSize: 20)),
+                  SizedBox(
+                    width: 100,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ListWheelInputStripe(),
+                        ListWheelInput(
+                          items: hours,
+                          selectedItem: personalizationC.wake_up_time_hour,
+                          onSelectedItemChanged: (index) {
+                            personalizationC.setWakeUpTimeHour(hours[index]);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: 100,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ListWheelInputStripe(),
+                        ListWheelInput(
+                          items: minutes,
+                          selectedItem: personalizationC.wake_up_time_minute,
+                          onSelectedItemChanged: (index) {
+                            personalizationC
+                                .setWakeUpTimeMinute(minutes[index]);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

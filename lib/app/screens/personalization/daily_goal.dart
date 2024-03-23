@@ -3,12 +3,15 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:waterloo/app/controllers/personalization_controller.dart';
 import 'package:waterloo/app/screens/home.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
 
 class DailyGoal extends StatelessWidget {
-  const DailyGoal({super.key});
+  DailyGoal({super.key});
+
+  final personalizationController = Get.find<PersonalizationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +33,13 @@ class DailyGoal extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "2400",
-                    style: TextStyle(
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
+                  Obx(
+                    () => Text(
+                      personalizationController.dailyGoal.value.toInt().toString(),
+                      style: TextStyle(
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   Padding(

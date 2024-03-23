@@ -1,19 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:waterloo/app/controllers/personalization_controller.dart';
 import 'package:waterloo/app/screens/personalization/2_tall.dart';
 import 'package:waterloo/app/widgets/appbar_personalization.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 
-class GenderPersonalization extends StatefulWidget {
-  const GenderPersonalization({super.key});
+class GenderPersonalization extends StatelessWidget {
+  GenderPersonalization({super.key});
 
-  @override
-  State<GenderPersonalization> createState() => _GenderPersonalizationState();
-}
+  final personalizationC = Get.find<PersonalizationController>();
 
-class _GenderPersonalizationState extends State<GenderPersonalization> {
+  final genderButtonActiveStyle = {
+    "bgColor": Colors.blue,
+    "borderColor": Colors.blue,
+    "iconColor": Colors.white,
+    "textColor": Colors.blue
+  };
+
+  final genderButtonInactiveStyle = {
+    "bgColor": Colors.white,
+    "borderColor": Colors.grey,
+    "iconColor": Colors.black,
+    "textColor": Colors.black
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,69 +42,58 @@ class _GenderPersonalizationState extends State<GenderPersonalization> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 100),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(20 + 1),
-                        decoration: BoxDecoration(
-                          border: null,
-                          shape: BoxShape.circle,
-                          color: Colors.blue,
-                        ),
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.male),
-                          color: Colors.white,
-                          iconSize: 70,
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        "Male",
-                        style: TextStyle(color: Colors.blue, fontSize: 20),
-                      )
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(20 + 0),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          shape: BoxShape.circle,
-                        ),
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.female),
-                          color: Colors.black,
-                          iconSize: 70,
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        "Female",
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                    ],
-                  )
-                ],
+              Obx(
+                () => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    GenderButton(
+                      onPressed: () {
+                        personalizationC.setGender(Gender.MALE);
+                      },
+                      icon: Icons.male,
+                      text: "Male",
+                      style: personalizationC.gender == Gender.MALE
+                          ? genderButtonActiveStyle
+                          : genderButtonInactiveStyle,
+                    ),
+                    GenderButton(
+                      onPressed: () {
+                        personalizationC.setGender(Gender.FEMALE);
+                      },
+                      icon: Icons.female,
+                      text: "Female",
+                      style: personalizationC.gender == Gender.FEMALE
+                          ? genderButtonActiveStyle
+                          : genderButtonInactiveStyle,
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: 50),
               Align(
-                child: OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    shape: StadiumBorder(),
-                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 12),
-                  ),
-                  child: Text(
-                    "Prefer not to say",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
+                child: Obx(
+                  () => ElevatedButton(
+                    onPressed: () {
+                      personalizationC.setGender(Gender.SECRET);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: personalizationC.gender == Gender.SECRET
+                          ? genderButtonActiveStyle["bgColor"]
+                          : genderButtonInactiveStyle["bgColor"],
+                      shape: StadiumBorder(),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 25,
+                        vertical: 12,
+                      ),
+                    ),
+                    child: Text(
+                      "Prefer not to say",
+                      style: TextStyle(
+                        color: personalizationC.gender == Gender.SECRET
+                            ? Colors.white
+                            : genderButtonInactiveStyle["textColor"],
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -113,6 +113,50 @@ class _GenderPersonalizationState extends State<GenderPersonalization> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class GenderButton extends StatelessWidget {
+  final void Function() onPressed;
+  final IconData icon;
+  final String text;
+  final Map style;
+
+  const GenderButton({
+    super.key,
+    required this.onPressed,
+    required this.icon,
+    required this.text,
+    required this.style,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            border: Border.all(color: this.style["borderColor"]),
+            shape: BoxShape.circle,
+            color: this.style["bgColor"],
+          ),
+          child: IconButton(
+            onPressed: () {
+              this.onPressed();
+            },
+            icon: Icon(this.icon),
+            color: this.style["iconColor"],
+            iconSize: 70,
+          ),
+        ),
+        SizedBox(height: 20),
+        Text(
+          this.text,
+          style: TextStyle(color: this.style["textColor"], fontSize: 20),
+        )
+      ],
     );
   }
 }
