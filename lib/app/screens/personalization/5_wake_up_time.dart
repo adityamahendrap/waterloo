@@ -83,7 +83,7 @@ class WakeUpPersonalization extends StatelessWidget {
             text: "Continue",
             onPressed: () {
               Get.to(
-                GoToBedPersonalization(),
+                () => GoToBedPersonalization(),
                 transition: Transition.noTransition,
               );
             },

@@ -36,12 +36,15 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   google_fonts: ^4.0.4
-  dots_indicator:
-  get:
+  dots_indicator: ^2.1.2
+  get: ^4.6.6
   percent_indicator: ^4.2.3
-  introduction_screen:
-  lottie:
-  collection:
+  introduction_screen: ^3.1.14
+  lottie: ^3.1.0
+  collection: ^1.18.0
+  flutter_otp_text_field: ^1.1.2+1
+  firebase_core: ^2.27.1
+  firebase_auth: ^4.17.9
 
 dev_dependencies:
   flutter_test:

@@ -9,7 +9,8 @@ import 'package:waterloo/app/widgets/text_title.dart';
 class GenderPersonalization extends StatelessWidget {
   GenderPersonalization({super.key});
 
-  final personalizationC = Get.find<PersonalizationController>();
+  final personalizationC =
+      Get.put(PersonalizationController(), permanent: true);
 
   final genderButtonActiveStyle = {
     "bgColor": Colors.blue,
@@ -106,7 +107,7 @@ class GenderPersonalization extends StatelessWidget {
             text: "Continue",
             onPressed: () {
               Get.to(
-                TallPersonalization(),
+                () => TallPersonalization(),
                 transition: Transition.noTransition,
               );
             },

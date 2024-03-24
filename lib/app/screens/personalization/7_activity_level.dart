@@ -86,8 +86,13 @@ class ActicityLabelPersonalization extends StatelessWidget {
             context: context,
             text: "Continue",
             onPressed: () {
+              if (personalizationC.activity_level.value == 0) {
+                Get.snackbar("Message", "Please select your activity level.",
+                    );
+                return;
+              }
               Get.to(
-                WeatherPersonalization(),
+                () => WeatherPersonalization(),
                 transition: Transition.noTransition,
               );
             },

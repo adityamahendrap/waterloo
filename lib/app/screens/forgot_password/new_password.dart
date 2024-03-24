@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:waterloo/app/screens/forgot_password/success.dart';
-import 'package:waterloo/app/screens/sign_in.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
-import 'package:waterloo/app/widgets/horizontal_divider.dart';
-import 'package:waterloo/app/widgets/oauth_button.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
 
 class NewPassword extends StatelessWidget {

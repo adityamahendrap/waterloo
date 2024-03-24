@@ -61,7 +61,7 @@ class AgePersonalization extends StatelessWidget {
             text: "Continue",
             onPressed: () {
               Get.to(
-                WakeUpPersonalization(),
+                () => WakeUpPersonalization(),
                 transition: Transition.noTransition,
               );
             },

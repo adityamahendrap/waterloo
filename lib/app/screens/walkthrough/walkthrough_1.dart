@@ -74,7 +74,7 @@ class Walkthrough1 extends StatelessWidget {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          Get.off(GetStarted());
+                          Get.off(() => GetStarted());
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 15),

@@ -71,7 +71,7 @@ class WeightPersonalization extends StatelessWidget {
             text: "Continue",
             onPressed: () {
               Get.to(
-                AgePersonalization(),
+                () => AgePersonalization(),
                 transition: Transition.noTransition,
               );
             },

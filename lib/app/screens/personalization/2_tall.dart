@@ -74,7 +74,7 @@ class TallPersonalization extends StatelessWidget {
             text: "Continue",
             onPressed: () {
               Get.to(
-                WeightPersonalization(),
+                () => WeightPersonalization(),
                 transition: Transition.noTransition,
               );
             },

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:waterloo/app/screens/sign_in.dart';
 import 'package:waterloo/app/screens/sign_up.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
@@ -39,7 +38,7 @@ class GetStarted extends StatelessWidget {
                   type: FullWidthButtonType.primary,
                   text: "Sign Up",
                   onPressed: () {
-                    Get.to(SignUp());
+                    Get.to(() => SignUp());
                   },
                 ),
                 SizedBox(height: 15),
@@ -47,7 +46,7 @@ class GetStarted extends StatelessWidget {
                   type: FullWidthButtonType.secondary,
                   text: "Sign In",
                   onPressed: () {
-                    Get.to(SignIn());
+                    Get.to(() => SignIn());
                   },
                 ),
                 SizedBox(height: 50),

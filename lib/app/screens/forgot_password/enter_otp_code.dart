@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:waterloo/app/screens/forgot_password/new_password.dart';
-import 'package:waterloo/app/screens/sign_up.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
-import 'package:waterloo/app/widgets/horizontal_divider.dart';
-import 'package:waterloo/app/widgets/oauth_button.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
+import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
 class EnterOtpCode extends StatelessWidget {
   const EnterOtpCode({Key? key}) : super(key: key);
@@ -36,28 +34,34 @@ class EnterOtpCode extends StatelessWidget {
                 SizedBox(height: 10),
                 Text(
                     "We've sent an OTP code to your email. Please check your inbox and enter the code below."),
+                Text(
+                    "We've sent an OTP code to your email. Please check your inbox and enter the code below."),
                 SizedBox(height: 25),
-                TextField(
-                  textAlignVertical: TextAlignVertical.center,
-                  obscureText: false,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.key_outlined,
-                      color: Colors.black,
-                    ),
-                    hintText: 'Code',
-                    hintStyle: TextStyle(color: Color(0xff9E9E9E)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    filled: true,
-                    fillColor: Color.fromARGB(101, 241, 241, 241),
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                  ),
+                OtpTextField(
+                  numberOfFields: 4,
+                  showFieldAsBox: true,
+                  onCodeChanged: (String code) {},
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  fieldWidth: MediaQuery.of(context).size.width / 5,
+                  filled: true,
+                  fillColor: Color.fromARGB(3, 0, 0, 0),
+                  borderColor: Colors.white,
+                  enabledBorderColor: Colors.white,
+                  focusedBorderColor: Colors.blue,
+                  autoFocus: true,
+                  textStyle:
+                      TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  onSubmit: (String verificationCode) {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("Verification Code"),
+                          content: Text('Code entered is $verificationCode'),
+                        );
+                      },
+                    );
+                  },
                 ),
                 SizedBox(height: 25),
                 Row(

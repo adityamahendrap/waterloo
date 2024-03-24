@@ -1,17 +1,12 @@
 import 'dart:async';
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:waterloo/app/screens/get_started.dart';
 import 'package:waterloo/app/screens/walkthrough/introduction.dart';
 
 class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Timer(Duration(seconds: 3), () {
-      // Get.offAll(GetStarted());
       Get.offAll(Introduction());
     });
 

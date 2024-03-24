@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:waterloo/app/controllers/personalization_controller.dart';
 import 'package:waterloo/app/screens/get_started.dart';
-import 'package:waterloo/app/screens/sign_in.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
-import 'package:waterloo/app/widgets/horizontal_divider.dart';
-import 'package:waterloo/app/widgets/oauth_button.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
 
 class Success extends StatelessWidget {
@@ -37,7 +35,8 @@ class Success extends StatelessWidget {
               context: context,
               text: "Go To Homepage",
               onPressed: () {
-                Get.offAll(GetStarted());
+                Get.offAll(() => GetStarted());
+                Get.delete<PersonalizationController>(force: true);
               },
             ),
           ],

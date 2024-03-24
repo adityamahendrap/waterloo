@@ -30,9 +30,10 @@ class OauthButton extends StatelessWidget {
           ),
         ],
       ),
-      style: ElevatedButton.styleFrom(
+      style: OutlinedButton.styleFrom(
         minimumSize: Size.fromHeight(50),
         shape: StadiumBorder(),
+        side: BorderSide(color: Colors.grey, width: 0.6),
       ),
     );
   }

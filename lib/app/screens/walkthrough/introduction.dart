@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:waterloo/app/screens/get_started.dart';
@@ -14,7 +12,7 @@ class Introduction extends StatelessWidget {
     return Scaffold(
       body: IntroductionScreen(
         pages: listPagesViewModel,
-        onDone: () => Get.offAll(GetStarted()),
+        onDone: () => Get.offAll(() => GetStarted()),
         showSkipButton: true,
         skip: Text(
           "Skip",

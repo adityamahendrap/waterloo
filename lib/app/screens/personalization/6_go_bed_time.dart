@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 import 'package:waterloo/app/controllers/personalization_controller.dart';
-import 'package:waterloo/app/screens/forgot_password/enter_otp_code.dart';
 import 'package:waterloo/app/screens/personalization/7_activity_level.dart';
-import 'package:waterloo/app/screens/sign_up.dart';
 import 'package:waterloo/app/widgets/appbar_personalization.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
-import 'package:waterloo/app/widgets/horizontal_divider.dart';
 import 'package:waterloo/app/widgets/list_wheel_input.dart';
 import 'package:waterloo/app/widgets/list_wheel_input_stripe.dart';
-import 'package:waterloo/app/widgets/oauth_button.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
 
 class GoToBedPersonalization extends StatelessWidget {
@@ -86,7 +80,7 @@ class GoToBedPersonalization extends StatelessWidget {
             text: "Continue",
             onPressed: () {
               Get.to(
-                ActicityLabelPersonalization(),
+                () => ActicityLabelPersonalization(),
                 transition: Transition.noTransition,
               );
             },

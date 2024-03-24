@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 import 'package:waterloo/app/controllers/personalization_controller.dart';
-import 'package:waterloo/app/screens/forgot_password/enter_otp_code.dart';
 import 'package:waterloo/app/screens/personalization/daily_goal.dart';
-import 'package:waterloo/app/screens/sign_up.dart';
 import 'package:waterloo/app/widgets/appbar_personalization.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
-import 'package:waterloo/app/widgets/horizontal_divider.dart';
-import 'package:waterloo/app/widgets/oauth_button.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
 
 class WeatherPersonalization extends StatelessWidget {
   WeatherPersonalization({super.key});
 
   final personalizationC = Get.find<PersonalizationController>();
-  List<Map<String, dynamic>> activityLevels = [
+  final List<Map<String, dynamic>> activityLevels = [
     {
       "iconPath": "https://cdn-icons-png.flaticon.com/128/2698/2698194.png",
       "primaryText": Weather.HOT,
@@ -81,9 +75,17 @@ class WeatherPersonalization extends StatelessWidget {
             context: context,
             text: "Finish",
             onPressed: () {
+              if (personalizationC.weather.value == "") {
+                Get.snackbar(
+                  "Message",
+                  "Please select your climate / weather condition.",
+                );
+                return;
+              }
+
               double result = personalizationC.calculateWaterIntake();
               personalizationC.setDailyGoal(result);
-              Get.offAll(DailyGoal());
+              Get.offAll(() => DailyGoal());
             },
           ),
         ],

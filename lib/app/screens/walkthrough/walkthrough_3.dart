@@ -72,7 +72,7 @@ class Walkthrough3 extends StatelessWidget {
                 type: FullWidthButtonType.primary,
                 text: "Let's Get Started",
                 onPressed: () {
-                  Get.offAll(GetStarted());
+                  Get.offAll(() => GetStarted());
                 },
               ),
             ),
