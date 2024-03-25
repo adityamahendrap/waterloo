@@ -15,7 +15,8 @@ import 'package:waterloo/app/widgets/text_title.dart';
 class SignIn extends StatelessWidget {
   SignIn({Key? key}) : super(key: key);
 
-  final signInC = Get.put(signInController());
+  final signInC = Get.put(SignInController());
+  final signInValidator = SignInValidator();
 
   @override
   Widget build(BuildContext context) {
@@ -46,81 +47,19 @@ class SignIn extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextFormField(
-                      controller: signInC.emailController,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: validateEmailInput,
-                      textAlignVertical: TextAlignVertical.center,
-                      obscureText: false,
-                      cursorColor: Colors.blue,
-                      cursorErrorColor: Colors.blue,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        prefixIcon: Icon(
-                          Icons.email_outlined,
-                          color: Colors.black,
-                        ),
-                        hintText: 'Email',
-                        hintStyle: TextStyle(color: Color(0xff9E9E9E)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        filled: true,
-                        fillColor: Color.fromARGB(101, 241, 241, 241),
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        focusedErrorBorder: InputBorder.none,
-                      ),
+                    Text(
+                      "Email",
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
+                    SizedBox(height: 10),
+                    _emailInput(),
                     SizedBox(height: 20),
                     Text(
                       "Password",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 10),
-                    Obx(
-                      () => TextFormField(
-                        controller: signInC.passwordController,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: validatePasswordInput,
-                        textAlignVertical: TextAlignVertical.center,
-                        obscureText: signInC.isPasswordHidden.value,
-                        cursorColor: Colors.blue,
-                        cursorErrorColor: Colors.blue,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                          prefixIcon: Icon(
-                            Icons.lock_outline,
-                            color: Colors.black,
-                          ),
-                          hintText: 'Password',
-                          hintStyle: TextStyle(color: Color(0xff9E9E9E)),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          filled: true,
-                          fillColor: Color.fromARGB(101, 241, 241, 241),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              signInC.isPasswordHidden.value
-                                  ? Icons.visibility_off_outlined
-                                  : Icons.visibility_outlined,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {
-                              signInC.isPasswordHidden.toggle();
-                            },
-                          ),
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          focusedErrorBorder: InputBorder.none,
-                        ),
-                      ),
-                    ),
+                    Obx(() => _passwordInput()),
                   ],
                 ),
               ),
@@ -199,7 +138,7 @@ class SignIn extends StatelessWidget {
             context: context,
             text: "Sign In",
             onPressed: () {
-              if (!isFormValid()) {
+              if (!signInValidator.isValid()) {
                 AppSnackBar.error("Failed", "Please fill the form correctly");
                 return;
               }
@@ -211,28 +150,76 @@ class SignIn extends StatelessWidget {
     );
   }
 
-  bool isFormValid() {
-    return validateEmailInput(signInC.emailController.text) == null &&
-        validatePasswordInput(signInC.passwordController.text) == null;
+  TextFormField _passwordInput() {
+    return TextFormField(
+      controller: signInC.passwordController,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (value) => signInValidator.password(value),
+      textAlignVertical: TextAlignVertical.center,
+      obscureText: signInC.isPasswordHidden.value,
+      cursorColor: Colors.blue,
+      cursorErrorColor: Colors.blue,
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+        prefixIcon: Icon(
+          Icons.lock_outline,
+          color: Colors.black,
+        ),
+        hintText: 'Password',
+        hintStyle: TextStyle(color: Color(0xff9E9E9E)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        filled: true,
+        fillColor: Color.fromARGB(101, 241, 241, 241),
+        suffixIcon: IconButton(
+          icon: Icon(
+            signInC.isPasswordHidden.value
+                ? Icons.visibility_off_outlined
+                : Icons.visibility_outlined,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            signInC.isPasswordHidden.toggle();
+          },
+        ),
+        focusedBorder: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        disabledBorder: InputBorder.none,
+        errorBorder: InputBorder.none,
+        focusedErrorBorder: InputBorder.none,
+      ),
+    );
   }
 
-  String? validateEmailInput(value) {
-    if (value!.isEmpty) {
-      return 'This field must be filled';
-    }
-    if (!GetUtils.isEmail(value)) {
-      return 'Invalid email format';
-    }
-    return null;
-  }
-
-  String? validatePasswordInput(value) {
-    if (value!.isEmpty) {
-      return 'This field must be filled';
-    }
-    if (value.length < 6) {
-      return 'Password must be at least 6 characters';
-    }
-    return null;
+  TextFormField _emailInput() {
+    return TextFormField(
+      controller: signInC.emailController,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (value) => signInValidator.email(value),
+      textAlignVertical: TextAlignVertical.center,
+      obscureText: false,
+      cursorColor: Colors.blue,
+      cursorErrorColor: Colors.blue,
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+        prefixIcon: Icon(
+          Icons.email_outlined,
+          color: Colors.black,
+        ),
+        hintText: 'Email',
+        hintStyle: TextStyle(color: Color(0xff9E9E9E)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        filled: true,
+        fillColor: Color.fromARGB(101, 241, 241, 241),
+        focusedBorder: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        disabledBorder: InputBorder.none,
+        errorBorder: InputBorder.none,
+        focusedErrorBorder: InputBorder.none,
+      ),
+    );
   }
 }

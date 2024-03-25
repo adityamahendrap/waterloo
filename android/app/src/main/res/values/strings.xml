@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="facebook_app_id">1095766918378939</string>
+    <string name="fb_login_protocol_scheme">fb1095766918378939</string>
+    <string name="facebook_client_token">92ead7f25621e830fefd95be6309f531</string>
+    <string name="app_name">"waterloo"</string>
+
+</resources>

@@ -12,6 +12,7 @@ class SignUp extends StatelessWidget {
   SignUp({Key? key}) : super(key: key);
 
   final signUpC = Get.put(SignUpController());
+  final signUpValidator = SignUpValidator();
 
   @override
   Widget build(BuildContext context) {
@@ -37,44 +38,17 @@ class SignUp extends StatelessWidget {
               Text(
                   "Create an account to track your water intake, set reminders, and unlock achievements"),
               SizedBox(height: 25),
-              Text(
-                "Email",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
               Form(
                 key: signUpC.signUpFormKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextFormField(
-                      controller: signUpC.emailController,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: validateEmailInput,
-                      textAlignVertical: TextAlignVertical.center,
-                      obscureText: false,
-                      cursorColor: Colors.blue,
-                      cursorErrorColor: Colors.blue,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        prefixIcon: Icon(
-                          Icons.email_outlined,
-                          color: Colors.black,
-                        ),
-                        hintText: 'Email',
-                        hintStyle: TextStyle(color: Color(0xff9E9E9E)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        filled: true,
-                        fillColor: Color.fromARGB(101, 241, 241, 241),
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        focusedErrorBorder: InputBorder.none,
-                      ),
+                    Text(
+                      "Email",
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
+                    SizedBox(height: 10),
+                    _emailInput(),
                     SizedBox(height: 20),
                     Text(
                       "Password",
@@ -82,45 +56,7 @@ class SignUp extends StatelessWidget {
                     ),
                     SizedBox(height: 10),
                     Obx(
-                      () => TextFormField(
-                        controller: signUpC.passwordController,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: validatePasswordInput,
-                        textAlignVertical: TextAlignVertical.center,
-                        obscureText: signUpC.isPasswordHidden.value,
-                        cursorColor: Colors.blue,
-                        cursorErrorColor: Colors.blue,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                          prefixIcon: Icon(
-                            Icons.lock_outline,
-                            color: Colors.black,
-                          ),
-                          hintText: 'Password',
-                          hintStyle: TextStyle(color: Color(0xff9E9E9E)),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          filled: true,
-                          fillColor: Color.fromARGB(101, 241, 241, 241),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              signUpC.isPasswordHidden.value
-                                  ? Icons.visibility_off_outlined
-                                  : Icons.visibility_outlined,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {
-                              signUpC.isPasswordHidden.toggle();
-                            },
-                          ),
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          focusedErrorBorder: InputBorder.none,
-                        ),
-                      ),
+                      () => _passwordInput(),
                     ),
                     SizedBox(height: 20),
                     Text(
@@ -129,45 +65,7 @@ class SignUp extends StatelessWidget {
                     ),
                     SizedBox(height: 10),
                     Obx(
-                      () => TextFormField(
-                        controller: signUpC.confirmPasswordController,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: validateConfirmPasswordInput,
-                        textAlignVertical: TextAlignVertical.center,
-                        obscureText: signUpC.isConfirmPasswordHidden.value,
-                        cursorErrorColor: Colors.blue,
-                        cursorColor: Colors.blue,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                          prefixIcon: Icon(
-                            Icons.lock_outline,
-                            color: Colors.black,
-                          ),
-                          hintText: "Confirm Password",
-                          hintStyle: TextStyle(color: Color(0xff9E9E9E)),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          filled: true,
-                          fillColor: Color.fromARGB(101, 241, 241, 241),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              signUpC.isConfirmPasswordHidden.value
-                                  ? Icons.visibility_off_outlined
-                                  : Icons.visibility_outlined,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {
-                              signUpC.isConfirmPasswordHidden.toggle();
-                            },
-                          ),
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          focusedErrorBorder: InputBorder.none,
-                        ),
-                      ),
+                      () => _confirmPasswordInput(),
                     ),
                   ],
                 ),
@@ -245,7 +143,7 @@ class SignUp extends StatelessWidget {
             context: context,
             text: "Sign Up",
             onPressed: () {
-              if (!isFormValid()) {
+              if (!signUpValidator.isValid()) {
                 AppSnackBar.error("Failed", "Please fill the form correctly");
                 return;
               } else if (!signUpC.isAgree.value) {
@@ -260,40 +158,118 @@ class SignUp extends StatelessWidget {
     );
   }
 
-  bool isFormValid() {
-    return validateEmailInput(signUpC.emailController.text) == null &&
-        validatePasswordInput(signUpC.passwordController.text) == null &&
-        validateConfirmPasswordInput(signUpC.confirmPasswordController.text) ==
-            null;
+  TextFormField _confirmPasswordInput() {
+    return TextFormField(
+      controller: signUpC.confirmPasswordController,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (value) => signUpValidator.email(value),
+      textAlignVertical: TextAlignVertical.center,
+      obscureText: signUpC.isConfirmPasswordHidden.value,
+      cursorErrorColor: Colors.blue,
+      cursorColor: Colors.blue,
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+        prefixIcon: Icon(
+          Icons.lock_outline,
+          color: Colors.black,
+        ),
+        hintText: "Confirm Password",
+        hintStyle: TextStyle(color: Color(0xff9E9E9E)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        filled: true,
+        fillColor: Color.fromARGB(101, 241, 241, 241),
+        suffixIcon: IconButton(
+          icon: Icon(
+            signUpC.isConfirmPasswordHidden.value
+                ? Icons.visibility_off_outlined
+                : Icons.visibility_outlined,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            signUpC.isConfirmPasswordHidden.toggle();
+          },
+        ),
+        focusedBorder: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        disabledBorder: InputBorder.none,
+        errorBorder: InputBorder.none,
+        focusedErrorBorder: InputBorder.none,
+      ),
+    );
   }
 
-  String? validateEmailInput(value) {
-    if (value!.isEmpty) {
-      return 'This field must be filled';
-    }
-    if (!GetUtils.isEmail(value)) {
-      return 'Invalid email format';
-    }
-    return null;
+  TextFormField _passwordInput() {
+    return TextFormField(
+      controller: signUpC.passwordController,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (value) => signUpValidator.password(value),
+      textAlignVertical: TextAlignVertical.center,
+      obscureText: signUpC.isPasswordHidden.value,
+      cursorColor: Colors.blue,
+      cursorErrorColor: Colors.blue,
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+        prefixIcon: Icon(
+          Icons.lock_outline,
+          color: Colors.black,
+        ),
+        hintText: 'Password',
+        hintStyle: TextStyle(color: Color(0xff9E9E9E)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        filled: true,
+        fillColor: Color.fromARGB(101, 241, 241, 241),
+        suffixIcon: IconButton(
+          icon: Icon(
+            signUpC.isPasswordHidden.value
+                ? Icons.visibility_off_outlined
+                : Icons.visibility_outlined,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            signUpC.isPasswordHidden.toggle();
+          },
+        ),
+        focusedBorder: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        disabledBorder: InputBorder.none,
+        errorBorder: InputBorder.none,
+        focusedErrorBorder: InputBorder.none,
+      ),
+    );
   }
 
-  String? validateConfirmPasswordInput(value) {
-    if (value!.isEmpty) {
-      return 'This field must be filled';
-    }
-    if (value != signUpC.passwordController.text) {
-      return 'Password does not match';
-    }
-    return null;
-  }
-
-  String? validatePasswordInput(value) {
-    if (value!.isEmpty) {
-      return 'This field must be filled';
-    }
-    if (value.length < 6) {
-      return 'Password must be at least 6 characters';
-    }
-    return null;
+  TextFormField _emailInput() {
+    return TextFormField(
+      controller: signUpC.emailController,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (value) => signUpValidator.confirmPassword(value),
+      textAlignVertical: TextAlignVertical.center,
+      obscureText: false,
+      cursorColor: Colors.blue,
+      cursorErrorColor: Colors.blue,
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+        prefixIcon: Icon(
+          Icons.email_outlined,
+          color: Colors.black,
+        ),
+        hintText: 'Email',
+        hintStyle: TextStyle(color: Color(0xff9E9E9E)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        filled: true,
+        fillColor: Color.fromARGB(101, 241, 241, 241),
+        focusedBorder: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        disabledBorder: InputBorder.none,
+        errorBorder: InputBorder.none,
+        focusedErrorBorder: InputBorder.none,
+      ),
+    );
   }
 }

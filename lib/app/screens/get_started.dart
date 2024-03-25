@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:waterloo/app/controllers/oauth_controller.dart';
 import 'package:waterloo/app/screens/sign_in.dart';
 import 'package:waterloo/app/screens/sign_up.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
@@ -7,7 +8,9 @@ import '../widgets/oauth_button.dart';
 import '../widgets/full_width_button.dart';
 
 class GetStarted extends StatelessWidget {
-  const GetStarted({Key? key}) : super(key: key);
+  GetStarted({Key? key}) : super(key: key);
+
+  final oauthC = Get.put(OAuthController(), permanent: true);
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +30,31 @@ class GetStarted extends StatelessWidget {
                 OauthButton(
                   iconPath: "assets/google_icon.png",
                   text: "Continue with Google",
+                  onPressed: () async {
+                    final r = await oauthC.signInWithGoogle();
+                    print("=====================");
+                    print(r);
+                  },
                 ),
                 SizedBox(height: 15),
                 OauthButton(
                   iconPath: "assets/facebook_icon.png",
                   text: "Continue with Facebook",
+                  onPressed: () async {
+                    final r = await oauthC.signInWithFacebook();
+                    print("=====================");
+                    print(r);
+                  },
+                ),
+                SizedBox(height: 15),
+                OauthButton(
+                  iconPath: "assets/github_icon.png",
+                  text: "Continue with GitHub",
+                  onPressed: () async {
+                    final r = await oauthC.signInWithGitHub(context);
+                    print("=====================");
+                    print(r);
+                  },
                 ),
                 SizedBox(height: 50),
                 FullWidthButton(

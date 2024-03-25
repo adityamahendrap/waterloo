@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:waterloo/app/screens/home.dart';
 import 'package:waterloo/app/utils/AppSnackBar.dart';
 
-class signInController extends GetxController {
+class SignInController extends GetxController {
   final signInFormKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -40,5 +40,31 @@ class signInController extends GetxController {
       AppSnackBar.error("Failed", "Something went wrong");
       print(e);
     }
+  }
+}
+
+class SignInValidator {
+  final signInC = Get.find<SignInController>();
+
+  bool isValid() {
+    return email(signInC.emailController.text) == null &&
+        password(signInC.passwordController.text) == null;
+  }
+
+  String? email(String? value) {
+    if (value!.isEmpty) {
+      return 'This field must be filled';
+    }
+    if (!GetUtils.isEmail(value)) {
+      return 'Invalid email format';
+    }
+    return null;
+  }
+
+  String? password(String? value) {
+    if (value!.isEmpty) {
+      return 'This field must be filled';
+    }
+    return null;
   }
 }

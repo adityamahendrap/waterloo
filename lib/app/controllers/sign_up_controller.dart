@@ -55,3 +55,44 @@ class SignUpController extends GetxController {
     }
   }
 }
+
+class SignUpValidator {
+  final signUpC = Get.find<SignUpController>();
+
+  bool isValid() {
+    return email(signUpC.emailController.text) == null &&
+        password(signUpC.passwordController.text) == null &&
+        confirmPassword(signUpC.confirmPasswordController.text) ==
+            null;
+  }
+
+  String? email(String? value) {
+    if (value!.isEmpty) {
+      return 'This field must be filled';
+    }
+    if (!GetUtils.isEmail(value)) {
+      return 'Invalid email format';
+    }
+    return null;
+  }
+
+  String? confirmPassword(String? value) {
+    if (value!.isEmpty) {
+      return 'This field must be filled';
+    }
+    if (value != signUpC.passwordController.text) {
+      return 'Password does not match';
+    }
+    return null;
+  }
+
+  String? password(String? value) {
+    if (value!.isEmpty) {
+      return 'This field must be filled';
+    }
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters';
+    }
+    return null;
+  }
+}
