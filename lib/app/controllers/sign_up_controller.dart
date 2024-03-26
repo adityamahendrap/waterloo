@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:waterloo/app/screens/personalization/1_gender.dart';
+import 'package:waterloo/app/services/auth_service.dart';
 import 'package:waterloo/app/utils/AppSnackBar.dart';
 
 class SignUpController extends GetxController {
@@ -34,13 +35,15 @@ class SignUpController extends GetxController {
     return null;
   }
 
-  void firebaseEmailSignUp() async {
+  void signUp(SignUpValidator validator) async {
+    if (!validator.isValid()) {
+      AppSnackBar.error("Failed",
+          "Please fill the form correctly and agree terms & conditions");
+      return;
+    }
     try {
-      final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: this.emailController.text,
-        password: this.passwordController.text,
-      );
+      final UserCredential credential = await AuthService.signUpWithEmail(
+          emailController.text, passwordController.text);
 
       if (credential.user != null) {
         AppSnackBar.success("Success", "Sign up success");
@@ -50,7 +53,7 @@ class SignUpController extends GetxController {
       print(e);
       AppSnackBar.error("Failed", e.message!);
     } catch (e) {
-      AppSnackBar.error("Failed", "Something went wrong");
+      AppSnackBar.error("Failed", "Unknown Error");
       print(e);
     }
   }
@@ -62,8 +65,8 @@ class SignUpValidator {
   bool isValid() {
     return email(signUpC.emailController.text) == null &&
         password(signUpC.passwordController.text) == null &&
-        confirmPassword(signUpC.confirmPasswordController.text) ==
-            null;
+        confirmPassword(signUpC.confirmPasswordController.text) == null &&
+        signUpC.isAgree.value;
   }
 
   String? email(String? value) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:waterloo/app/controllers/oauth_controller.dart';
 import 'package:waterloo/app/controllers/sign_up_controller.dart';
 import 'package:waterloo/app/screens/sign_in.dart';
 import 'package:waterloo/app/utils/AppSnackBar.dart';
@@ -11,6 +12,7 @@ import 'package:waterloo/app/widgets/text_title.dart';
 class SignUp extends StatelessWidget {
   SignUp({Key? key}) : super(key: key);
 
+  final oauthC = OAuthController();
   final signUpC = Get.put(SignUpController());
   final signUpValidator = SignUpValidator();
 
@@ -130,11 +132,25 @@ class SignUp extends StatelessWidget {
               OauthButton(
                 iconPath: "assets/google_icon.png",
                 text: "Continue with Google",
+                onPressed: () async {
+                  oauthC.google();
+                },
               ),
               SizedBox(height: 15),
               OauthButton(
                 iconPath: "assets/facebook_icon.png",
                 text: "Continue with Facebook",
+                onPressed: () async {
+                  oauthC.facebook();
+                },
+              ),
+              SizedBox(height: 15),
+              OauthButton(
+                iconPath: "assets/github_icon.png",
+                text: "Continue with GitHub",
+                onPressed: () async {
+                  oauthC.github(context);
+                },
               ),
               SizedBox(height: 100),
             ],
@@ -143,14 +159,7 @@ class SignUp extends StatelessWidget {
             context: context,
             text: "Sign Up",
             onPressed: () {
-              if (!signUpValidator.isValid()) {
-                AppSnackBar.error("Failed", "Please fill the form correctly");
-                return;
-              } else if (!signUpC.isAgree.value) {
-                AppSnackBar.error("Failed", "Please agree to the terms");
-                return;
-              }
-              signUpC.firebaseEmailSignUp();
+              signUpC.signUp(signUpValidator);
             },
           ),
         ],
@@ -162,7 +171,7 @@ class SignUp extends StatelessWidget {
     return TextFormField(
       controller: signUpC.confirmPasswordController,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: (value) => signUpValidator.email(value),
+      validator: (value) => signUpValidator.confirmPassword(value),
       textAlignVertical: TextAlignVertical.center,
       obscureText: signUpC.isConfirmPasswordHidden.value,
       cursorErrorColor: Colors.blue,

@@ -4,57 +4,44 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:github_sign_in/github_sign_in.dart';
+import 'package:waterloo/app/screens/home.dart';
+import 'package:waterloo/app/screens/personalization/1_gender.dart';
+import 'package:waterloo/app/services/auth_service.dart';
+import 'package:get_storage/get_storage.dart';
 
 // !! https://firebase.flutter.dev/docs/auth/social
-class OAuthController extends GetxController {
-  Future<UserCredential> signInWithGoogle() async {
-    print("Sign in with google");
+class OAuthController  {
+  GetStorage box = GetStorage();
 
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
-
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+  void _redirect(UserCredential credential) {
+    credential.additionalUserInfo!.isNewUser
+        ? Get.offAll(GenderPersonalization())
+        : Get.offAll(Home());
   }
 
-  Future<UserCredential> signInWithGitHub(BuildContext context) async {
-    // Create a GitHubSignIn instance
-    final GitHubSignIn gitHubSignIn = GitHubSignIn(
-      clientId: "97082719470317a25684",
-      clientSecret: "83e9938608ddf74f678aecb210d95e4d61fb38a2",
-      redirectUrl: 'https://waterloo-5ec9e.firebaseapp.com/__/auth/handler',
-    );
-
-    // Trigger the sign-in flow
-    final result = await gitHubSignIn.signIn(context);
-
-    // Create a credential from the access token
-    final githubAuthCredential = GithubAuthProvider.credential(result.token!);
-
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance
-        .signInWithCredential(githubAuthCredential);
+  void _setAuth(UserCredential credential) async {
+    box.write('auth', credential);
   }
 
-  Future<UserCredential> signInWithFacebook() async {
-    // Trigger the sign-in flow
-    final LoginResult loginResult = await FacebookAuth.instance.login();
+  void google() async {
+    final UserCredential credential = await AuthService.signInWithGoogle();
+    print(credential);
+    _setAuth(credential);
+    _redirect(credential);
+  }
 
-    // Create a credential from the access token
-    final OAuthCredential facebookAuthCredential =
-        FacebookAuthProvider.credential(loginResult.accessToken!.token);
+  void facebook() async {
+    final UserCredential credential = await AuthService.signInWithFacebook();
+    print(credential);
+    _setAuth(credential);
+    _redirect(credential);
+  }
 
-    // Once signed in, return the UserCredential
-    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+  void github(BuildContext context) async {
+    final UserCredential credential =
+        await AuthService.signInWithGitHub(context);
+    print(credential);
+    _setAuth(credential);
+    _redirect(credential);
   }
 }

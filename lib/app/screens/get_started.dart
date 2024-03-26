@@ -10,7 +10,7 @@ import '../widgets/full_width_button.dart';
 class GetStarted extends StatelessWidget {
   GetStarted({Key? key}) : super(key: key);
 
-  final oauthC = Get.put(OAuthController(), permanent: true);
+  final oauthC = OAuthController();
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +31,7 @@ class GetStarted extends StatelessWidget {
                   iconPath: "assets/google_icon.png",
                   text: "Continue with Google",
                   onPressed: () async {
-                    final r = await oauthC.signInWithGoogle();
-                    print("=====================");
-                    print(r);
+                    oauthC.google();
                   },
                 ),
                 SizedBox(height: 15),
@@ -41,9 +39,7 @@ class GetStarted extends StatelessWidget {
                   iconPath: "assets/facebook_icon.png",
                   text: "Continue with Facebook",
                   onPressed: () async {
-                    final r = await oauthC.signInWithFacebook();
-                    print("=====================");
-                    print(r);
+                    oauthC.facebook();
                   },
                 ),
                 SizedBox(height: 15),
@@ -51,9 +47,7 @@ class GetStarted extends StatelessWidget {
                   iconPath: "assets/github_icon.png",
                   text: "Continue with GitHub",
                   onPressed: () async {
-                    final r = await oauthC.signInWithGitHub(context);
-                    print("=====================");
-                    print(r);
+                    oauthC.github(context);
                   },
                 ),
                 SizedBox(height: 50),

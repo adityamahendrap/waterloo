@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:waterloo/app/controllers/oauth_controller.dart';
 import 'package:waterloo/app/controllers/sign_in_controller.dart';
 import 'package:waterloo/app/screens/forgot_password/send_otp_code.dart';
 import 'package:waterloo/app/screens/home.dart';
@@ -15,6 +16,7 @@ import 'package:waterloo/app/widgets/text_title.dart';
 class SignIn extends StatelessWidget {
   SignIn({Key? key}) : super(key: key);
 
+  final oauthC = OAuthController();
   final signInC = Get.put(SignInController());
   final signInValidator = SignInValidator();
 
@@ -125,11 +127,25 @@ class SignIn extends StatelessWidget {
               OauthButton(
                 iconPath: "assets/google_icon.png",
                 text: "Continue with Google",
+                onPressed: () async {
+                  oauthC.google();
+                },
               ),
               SizedBox(height: 15),
               OauthButton(
                 iconPath: "assets/facebook_icon.png",
                 text: "Continue with Facebook",
+                onPressed: () async {
+                  oauthC.facebook();
+                },
+              ),
+              SizedBox(height: 15),
+              OauthButton(
+                iconPath: "assets/github_icon.png",
+                text: "Continue with GitHub",
+                onPressed: () async {
+                  oauthC.github(context);
+                },
               ),
               SizedBox(height: 100),
             ],
@@ -138,11 +154,7 @@ class SignIn extends StatelessWidget {
             context: context,
             text: "Sign In",
             onPressed: () {
-              if (!signInValidator.isValid()) {
-                AppSnackBar.error("Failed", "Please fill the form correctly");
-                return;
-              }
-              signInC.firebaseEmailSignIn();
+              signInC.signIn(signInValidator);
             },
           ),
         ],

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:waterloo/app/screens/home.dart';
+import 'package:waterloo/app/services/auth_service.dart';
 import 'package:waterloo/app/utils/AppSnackBar.dart';
 
 class SignInController extends GetxController {
@@ -24,10 +25,15 @@ class SignInController extends GetxController {
     super.onClose();
   }
 
-  void firebaseEmailSignIn() async {
+  void signIn(SignInValidator validator) async {
+    if (!validator.isValid()) {
+      AppSnackBar.error("Failed", "Please fill the form correctly");
+      return;
+    }
+
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
+      final UserCredential credential = await AuthService.signInWithEmail(
+          emailController.text, passwordController.text);
 
       if (credential.user != null) {
         AppSnackBar.success("Success", "Sign up success");
@@ -37,7 +43,7 @@ class SignInController extends GetxController {
       print(e);
       AppSnackBar.error("Failed", e.message!);
     } catch (e) {
-      AppSnackBar.error("Failed", "Something went wrong");
+      AppSnackBar.error("Failed", "Unknown Error");
       print(e);
     }
   }
