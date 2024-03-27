@@ -22,10 +22,8 @@ class _HomeState extends State<Home> {
   var waterLevel = 0.1;
   Timer? timer;
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  void _onBottomNavItemTapped(int index) {
+    setState(() => _selectedIndex = index);
   }
 
   void _incrementWaterLevel(double target) {
@@ -76,18 +74,7 @@ class _HomeState extends State<Home> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // Slider(
-                //   value: waterLevel,
-                //   max: 1.0,
-                //   min: 0.0,
-                //   onChanged: (value) {
-                //     setState(() {
-                //       waterLevel = value;
-                //       sphereBottleRef.currentState?.waterLevel = waterLevel;
-                //     });
-                //   },
-                // ),
-                _WaterCounter(),
+                // _WaterCounter(),
                 SizedBox(height: 20),
                 _TodayHistory(),
               ],
@@ -102,31 +89,36 @@ class _HomeState extends State<Home> {
   BottomNavigationBar _BottomNavBar() {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
+      currentIndex: _selectedIndex,
+      selectedItemColor: Colors.blue,
+      onTap: _onBottomNavItemTapped,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.home),
+          icon: Icon(Icons.home_outlined),
           label: 'Home',
+          activeIcon: Icon(Icons.home_filled),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.business),
+          icon: Icon(Icons.history_outlined),
           label: 'History',
+          activeIcon: Icon(Icons.history),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.school),
+          icon: Icon(Icons.report_outlined),
           label: 'Report',
+          activeIcon: Icon(Icons.report),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.school),
+          icon: Icon(Icons.emoji_events_outlined),
           label: 'Achievements',
+          activeIcon: Icon(Icons.emoji_events),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.school),
+          icon: Icon(Icons.account_circle_outlined),
           label: 'Account',
+          activeIcon: Icon(Icons.account_circle),
         ),
       ],
-      currentIndex: _selectedIndex,
-      selectedItemColor: Colors.amber[800],
-      onTap: _onItemTapped,
     );
   }
 
@@ -251,7 +243,8 @@ class _HomeState extends State<Home> {
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(25),
+        padding:
+            const EdgeInsets.only(left: 25, right: 25, top: 30, bottom: 25),
         child: Column(
           children: [
             Container(

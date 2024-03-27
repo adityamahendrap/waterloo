@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
+import 'package:waterloo/app/screens/cup_size/switch_cup_size.dart';
 import 'package:waterloo/app/screens/get_started.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:waterloo/app/screens/history/history.dart';
 import 'package:waterloo/app/screens/home.dart';
 import 'firebase_options.dart';
 
@@ -22,7 +24,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme()),
-      home: Home(),
+      home: DrinkHistory(),
     );
   }
 }

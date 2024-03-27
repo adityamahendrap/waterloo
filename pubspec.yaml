@@ -50,6 +50,10 @@ dependencies:
   flutter_facebook_auth: ^6.0.4
   get_storage: ^2.1.1
   water_bottle: ^0.0.7
+  font_awesome_flutter: ^10.7.0
+  modal_bottom_sheet: ^3.0.0
+  date_picker_timeline: ^1.2.5
+  easy_date_timeline:
 
 dev_dependencies:
   flutter_test:
