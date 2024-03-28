@@ -111,7 +111,7 @@ class SignUp extends StatelessWidget {
                   Text("Already have an account?"),
                   TextButton(
                     onPressed: () {
-                      Get.off(SignIn());
+                      Get.off(() => SignIn());
                     },
                     style: ButtonStyle(
                       padding: MaterialStateProperty.all(EdgeInsets.zero),
@@ -255,7 +255,7 @@ class SignUp extends StatelessWidget {
     return TextFormField(
       controller: signUpC.emailController,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: (value) => signUpValidator.confirmPassword(value),
+      validator: (value) => signUpValidator.email(value),
       textAlignVertical: TextAlignVertical.center,
       obscureText: false,
       cursorColor: Colors.blue,

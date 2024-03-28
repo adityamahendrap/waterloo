@@ -32,7 +32,9 @@ class DailyGoal extends StatelessWidget {
                 children: [
                   Obx(
                     () => Text(
-                      personalizationController.dailyGoal.value.toInt().toString(),
+                      personalizationController.dailyGoal.value
+                          .toInt()
+                          .toString(),
                       style: TextStyle(
                         fontSize: 50,
                         fontWeight: FontWeight.bold,
@@ -75,7 +77,7 @@ class DailyGoal extends StatelessWidget {
             context: context,
             text: "Let's Hydrate",
             onPressed: () {
-              Get.offAll(Home());
+              Get.offAll(() => Home());
             },
           )
         ],

@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:color_log/color_log.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:waterloo/app/widgets/main_appbarr.dart';
 import 'package:water_bottle/water_bottle.dart';
@@ -59,30 +61,35 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme()),
-      home: Scaffold(
+    final testButton = ElevatedButton(
+      child: Text('Test'),
+      onPressed: () {
+        final box = GetStorage();
+        clog.debug('${box.read("auth")}');
+      },
+    );
+
+    return Scaffold(
+      backgroundColor: Color(0xffF5F5F5),
+      resizeToAvoidBottomInset: false,
+      appBar: MainAppBar(
+        title: "Home",
         backgroundColor: Color(0xffF5F5F5),
-        resizeToAvoidBottomInset: false,
-        appBar: MainAppBar(
-          title: "Home",
-          backgroundColor: Color(0xffF5F5F5),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // _WaterCounter(),
-                SizedBox(height: 20),
-                _TodayHistory(),
-              ],
-            ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // testButton,
+              // _WaterCounter(),
+              SizedBox(height: 20),
+              _TodayHistory(),
+            ],
           ),
         ),
-        bottomNavigationBar: _BottomNavBar(),
       ),
+      bottomNavigationBar: _BottomNavBar(),
     );
   }
 

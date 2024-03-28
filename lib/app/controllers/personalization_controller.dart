@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class Gender {
   static const String MALE = "Male";
@@ -20,6 +22,8 @@ class Weather {
 }
 
 class PersonalizationController extends GetxController {
+  GetStorage box = GetStorage();
+
   final gender = "Male".obs;
   final tall = 170.obs;
   final weight = 50.obs;
@@ -43,6 +47,36 @@ class PersonalizationController extends GetxController {
   void setGoBedTimeHour(int value) => go_bed_time_hour.value = value;
   void setGoBedTimeMinute(int value) => go_bed_time_minute.value = value;
   void setDailyGoal(double value) => dailyGoal.value = value;
+
+  void savePersonalization() {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+    final Map<String, dynamic> user = box.read('auth');
+
+    users
+        .doc(user['uid'])
+        .update({
+          'personalization': {
+            'gender': this.gender.value,
+            'tall': this.tall.value,
+            'weight': this.weight.value,
+            'age': this.age.value,
+            'wake_up_time': {
+              'hour': this.wake_up_time_hour.value,
+              'minute': this.wake_up_time_minute.value,
+            },
+            'go_bed_time': {
+              'hour': this.go_bed_time_hour.value,
+              'minute': this.go_bed_time_minute.value,
+            },
+            'activity_level': this.activity_level.value,
+            'weather': this.weather.value,
+          }
+        })
+        .then((value) => print("Personalization Updated"))
+        .catchError(
+            (error) => print("Failed to update personalization: $error"));
+  }
 
   double calculateWaterIntake() {
     double result;

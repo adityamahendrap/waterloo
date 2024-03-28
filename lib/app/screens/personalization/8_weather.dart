@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:waterloo/app/controllers/personalization_controller.dart';
 import 'package:waterloo/app/screens/personalization/daily_goal.dart';
+import 'package:waterloo/app/utils/AppSnackBar.dart';
 import 'package:waterloo/app/widgets/appbar_personalization.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
@@ -76,15 +77,15 @@ class WeatherPersonalization extends StatelessWidget {
             text: "Finish",
             onPressed: () {
               if (personalizationC.weather.value == "") {
-                Get.snackbar(
-                  "Message",
-                  "Please select your climate / weather condition.",
-                );
+                AppSnackBar.error(
+                    "Failed", "Please select a weather condition");
                 return;
               }
 
               double result = personalizationC.calculateWaterIntake();
               personalizationC.setDailyGoal(result);
+              personalizationC.savePersonalization();
+              Get.delete<PersonalizationController>();
               Get.offAll(() => DailyGoal());
             },
           ),

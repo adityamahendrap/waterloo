@@ -6,6 +6,7 @@ import 'package:waterloo/app/screens/sign_up.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
 import '../widgets/oauth_button.dart';
 import '../widgets/full_width_button.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class GetStarted extends StatelessWidget {
   GetStarted({Key? key}) : super(key: key);
@@ -14,6 +15,13 @@ class GetStarted extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const spinkit = SpinKitWaveSpinner(
+      color: Colors.white,
+      size: 50.0,
+      waveColor: Colors.blue,
+      trackColor: Colors.blue,
+      curve: Curves.easeInOutCubic,
+    );
     return Scaffold(
       body: ListView(
         padding: EdgeInsets.fromLTRB(20, 100, 20, 20),

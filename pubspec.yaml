@@ -54,6 +54,10 @@ dependencies:
   modal_bottom_sheet: ^3.0.0
   date_picker_timeline: ^1.2.5
   easy_date_timeline:
+  cloud_firestore: ^4.15.10
+  flutter_spinkit: ^5.2.1
+  color_log: ^0.0.6
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:

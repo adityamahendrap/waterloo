@@ -89,7 +89,7 @@ class SignIn extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      Get.to(SendOtpCode());
+                      Get.to(() => SendOtpCode());
                     },
                     child: Text(
                       "Forgot Password?",
@@ -108,7 +108,7 @@ class SignIn extends StatelessWidget {
                   Text("Doesn't have an account? "),
                   TextButton(
                     onPressed: () {
-                      Get.off(SignUp());
+                      Get.off(() => SignUp());
                     },
                     style: ButtonStyle(
                       padding: MaterialStateProperty.all(EdgeInsets.zero),

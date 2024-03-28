@@ -14,8 +14,12 @@ class DrinkHistory extends StatefulWidget {
 }
 
 class _DrinkHistoryState extends State<DrinkHistory> {
-  DateTime _focusDate = DateTime.now();
   DateTime now = DateTime.now();
+
+  bool compareDateInDateTime(DateTime dateTime1, DateTime dateTime2) {
+    return DateTime(dateTime1.year, dateTime1.month, dateTime1.day) ==
+        DateTime(dateTime2.year, dateTime2.month, dateTime2.day);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,9 +102,7 @@ class _DrinkHistoryState extends State<DrinkHistory> {
                           width: 7,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: DateTime(now.year, now.month, now.day) ==
-                                    DateTime(fullDate.year, fullDate.month,
-                                        fullDate.day)
+                            color: compareDateInDateTime(now, fullDate)
                                 ? Colors.blue
                                 : Colors.transparent,
                           ),
@@ -128,23 +130,6 @@ class _DrinkHistoryState extends State<DrinkHistory> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  SizedBox _date1() {
-    return SizedBox(
-      height: 100,
-      child: DatePicker(
-        DateTime.now(),
-        initialSelectedDate: DateTime.now(),
-        selectionColor: Colors.blue.shade50,
-        selectedTextColor: Colors.black,
-        onDateChange: (date) {
-          setState(() {
-            // _selectedValue = date;
-          });
-        },
       ),
     );
   }

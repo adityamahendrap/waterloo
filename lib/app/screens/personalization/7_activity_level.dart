@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:waterloo/app/controllers/personalization_controller.dart';
 import 'package:waterloo/app/screens/personalization/8_weather.dart';
+import 'package:waterloo/app/utils/AppSnackBar.dart';
 import 'package:waterloo/app/widgets/appbar_personalization.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
@@ -87,8 +88,7 @@ class ActicityLabelPersonalization extends StatelessWidget {
             text: "Continue",
             onPressed: () {
               if (personalizationC.activity_level.value == 0) {
-                Get.snackbar("Message", "Please select your activity level.",
-                    );
+                AppSnackBar.error("Failed", "Please select an activity level");
                 return;
               }
               Get.to(

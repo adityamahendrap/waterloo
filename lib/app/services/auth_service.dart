@@ -1,3 +1,4 @@
+import 'package:color_log/color_log.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -12,6 +13,7 @@ class AuthService {
       email: email,
       password: password,
     );
+    clog.info('email credential: ${credential}');
 
     return credential;
   }
@@ -21,6 +23,7 @@ class AuthService {
     final UserCredential credential = await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password);
 
+    clog.info('email credential: ${credential}');
     return credential;
   }
 
@@ -37,6 +40,7 @@ class AuthService {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
+    clog.info('google credential: ${credential}');
 
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
@@ -55,6 +59,7 @@ class AuthService {
 
     // Create a credential from the access token
     final githubAuthCredential = GithubAuthProvider.credential(result.token!);
+    clog.info('github credential: ${githubAuthCredential}');
 
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance
@@ -68,6 +73,7 @@ class AuthService {
     // Create a credential from the access token
     final OAuthCredential facebookAuthCredential =
         FacebookAuthProvider.credential(loginResult.accessToken!.token);
+    clog.info('facebook credential: ${facebookAuthCredential}');
 
     // Once signed in, return the UserCredential
     return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
