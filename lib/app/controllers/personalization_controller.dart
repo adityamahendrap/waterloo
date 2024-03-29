@@ -71,7 +71,8 @@ class PersonalizationController extends GetxController {
             },
             'activity_level': this.activity_level.value,
             'weather': this.weather.value,
-          }
+          },
+          'daily_goal': this.dailyGoal.value,
         })
         .then((value) => print("Personalization Updated"))
         .catchError(

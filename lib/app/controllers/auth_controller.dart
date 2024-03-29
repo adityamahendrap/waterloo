@@ -27,6 +27,7 @@ class AuthController {
             'photo_url': credential.user?.photoURL,
             'provider': credential.credential?.providerId,
             'personalization': null,
+            'daily_goal': null,
             'created_at': FieldValue.serverTimestamp(),
           })
           .then((_) => clog.info("user added"))
@@ -61,9 +62,11 @@ class AuthController {
     Get.offAll(() => Home());
   }
 
-  void logout() {
+  void logout() async {
+    await FirebaseAuth.instance.signOut();
+    clog.info('user logged out');
     box.remove('auth');
-    clog.info('user logged out\ncache cleared');
+    clog.info('cache cleared');
     Get.offAll(() => GetStarted());
   }
 }

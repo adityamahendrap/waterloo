@@ -10,7 +10,7 @@ class GenderPersonalization extends StatelessWidget {
   GenderPersonalization({super.key});
 
   final personalizationC =
-      Get.put(PersonalizationController(), permanent: true);
+      Get.put(PersonalizationController());
 
   final genderButtonActiveStyle = {
     "bgColor": Colors.blue,

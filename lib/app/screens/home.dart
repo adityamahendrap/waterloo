@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:animated_digit/animated_digit.dart';
 import 'package:color_log/color_log.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,8 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:waterloo/app/controllers/nav_controller.dart';
+import 'package:waterloo/app/controllers/water_controller.dart';
 import 'package:waterloo/app/widgets/main_appbarr.dart';
 import 'package:water_bottle/water_bottle.dart';
 
@@ -18,35 +21,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _selectedIndex = 0;
-
-  final sphereBottleRef = GlobalKey<SphericalBottleState>();
-  var waterLevel = 0.1;
-  Timer? timer;
-
-  void _onBottomNavItemTapped(int index) {
-    setState(() => _selectedIndex = index);
-  }
-
-  void _incrementWaterLevel(double target) {
-    const duration = const Duration(milliseconds: 100);
-    timer = Timer.periodic(duration, (Timer t) {
-      setState(() {
-        if (waterLevel >= 1.0) {
-          timer?.cancel();
-        } else if (waterLevel >= target) {
-          timer?.cancel();
-        } else {
-          waterLevel += 0.01;
-          sphereBottleRef.currentState?.waterLevel = waterLevel;
-        }
-      });
-    });
-  }
+  final waterC = Get.put(WaterController());
+  final navC = Get.put(NavController());
 
   @override
   void dispose() {
-    timer?.cancel();
     super.dispose();
   }
 
@@ -54,21 +33,15 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
+    waterC.setDailyGoal();
+
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      sphereBottleRef.currentState?.waterLevel = waterLevel;
+      waterC.sphereBottleRef.currentState?.waterLevel = waterC.waterLevel.value;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final testButton = ElevatedButton(
-      child: Text('Test'),
-      onPressed: () {
-        final box = GetStorage();
-        clog.debug('${box.read("auth")}');
-      },
-    );
-
     return Scaffold(
       backgroundColor: Color(0xffF5F5F5),
       resizeToAvoidBottomInset: false,
@@ -81,8 +54,7 @@ class _HomeState extends State<Home> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // testButton,
-              // _WaterCounter(),
+              _WaterCounter(),
               SizedBox(height: 20),
               _TodayHistory(),
             ],
@@ -93,40 +65,40 @@ class _HomeState extends State<Home> {
     );
   }
 
-  BottomNavigationBar _BottomNavBar() {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      currentIndex: _selectedIndex,
-      selectedItemColor: Colors.blue,
-      onTap: _onBottomNavItemTapped,
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined),
-          label: 'Home',
-          activeIcon: Icon(Icons.home_filled),
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.history_outlined),
-          label: 'History',
-          activeIcon: Icon(Icons.history),
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.report_outlined),
-          label: 'Report',
-          activeIcon: Icon(Icons.report),
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.emoji_events_outlined),
-          label: 'Achievements',
-          activeIcon: Icon(Icons.emoji_events),
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.account_circle_outlined),
-          label: 'Account',
-          activeIcon: Icon(Icons.account_circle),
-        ),
-      ],
-    );
+  Widget _BottomNavBar() {
+    return Obx(() => BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: navC.selectedIndex.value,
+          selectedItemColor: Colors.blue,
+          onTap: (index) => navC.selectedIndex.value = index,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              label: 'Home',
+              activeIcon: Icon(Icons.home_filled),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.history_outlined),
+              label: 'History',
+              activeIcon: Icon(Icons.history),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.report_outlined),
+              label: 'Report',
+              activeIcon: Icon(Icons.report),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.emoji_events_outlined),
+              label: 'Achievements',
+              activeIcon: Icon(Icons.emoji_events),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle_outlined),
+              label: 'Account',
+              activeIcon: Icon(Icons.account_circle),
+            ),
+          ],
+        ));
   }
 
   Container _TodayHistory() {
@@ -265,7 +237,7 @@ class _HomeState extends State<Home> {
                   child: SizedBox(
                     width: 100,
                     child: SphericalBottle(
-                      key: sphereBottleRef,
+                      key: waterC.sphereBottleRef,
                       waterColor: Colors.blue,
                       bottleColor: Colors.blue,
                       capColor: Colors.grey.shade700,
@@ -275,24 +247,25 @@ class _HomeState extends State<Home> {
               ),
             ),
             SizedBox(height: 20),
-            Text(
-              "0",
-              style: TextStyle(
-                fontSize: 60,
-                fontWeight: FontWeight.bold,
-                height: 1,
+            Obx(
+              () => AnimatedDigitWidget(
+                value: waterC.currentWater.value.toInt(),
+                textStyle: TextStyle(
+                  fontSize: 60,
+                  fontWeight: FontWeight.bold,
+                  height: 1,
+                ),
+                duration: Duration(milliseconds: 500),
               ),
             ),
-            Text("/2500mL", style: TextStyle(fontSize: 17)),
+            Text("/${waterC.dailyGoal.value.toInt()}mL",
+                style: TextStyle(fontSize: 17)),
             SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    double target = waterLevel + (200 / 2500);
-                    _incrementWaterLevel(target);
-                  },
+                  onPressed: () => waterC.drinkWater(200),
                   child: Text(
                     "Drink (200mL)",
                     style: TextStyle(

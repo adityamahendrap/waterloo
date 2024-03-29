@@ -85,7 +85,6 @@ class WeatherPersonalization extends StatelessWidget {
               double result = personalizationC.calculateWaterIntake();
               personalizationC.setDailyGoal(result);
               personalizationC.savePersonalization();
-              Get.delete<PersonalizationController>();
               Get.offAll(() => DailyGoal());
             },
           ),
