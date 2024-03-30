@@ -226,26 +226,26 @@ class _HomeState extends State<Home> {
             const EdgeInsets.only(left: 25, right: 25, top: 30, bottom: 25),
         child: Column(
           children: [
-            Container(
-              padding: EdgeInsets.all(0),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.2,
-                ),
-                child: AspectRatio(
-                  aspectRatio: 0.99,
-                  child: SizedBox(
-                    width: 100,
-                    child: SphericalBottle(
-                      key: waterC.sphereBottleRef,
-                      waterColor: Colors.blue,
-                      bottleColor: Colors.blue,
-                      capColor: Colors.grey.shade700,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // Container(
+            //   padding: EdgeInsets.all(0),
+            //   child: Padding(
+            //     padding: EdgeInsets.symmetric(
+            //       horizontal: MediaQuery.of(context).size.width * 0.2,
+            //     ),
+            //     child: AspectRatio(
+            //       aspectRatio: 0.99,
+            //       child: SizedBox(
+            //         width: 100,
+            //         child: SphericalBottle(
+            //           key: waterC.sphereBottleRef,
+            //           waterColor: Colors.blue,
+            //           bottleColor: Colors.blue,
+            //           capColor: Colors.grey.shade700,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             SizedBox(height: 20),
             Obx(
               () => AnimatedDigitWidget(
