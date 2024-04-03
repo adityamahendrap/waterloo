@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:waterloo/app/controllers/oauth_controller.dart';
+import 'package:waterloo/app/controllers/base/auth_controller.dart';
 import 'package:waterloo/app/screens/sign_in.dart';
 import 'package:waterloo/app/screens/sign_up.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
@@ -11,7 +11,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 class GetStarted extends StatelessWidget {
   GetStarted({Key? key}) : super(key: key);
 
-  final oauthC = OAuthController();
+  final authC = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -36,44 +36,29 @@ class GetStarted extends StatelessWidget {
                 Text("Let's dive into your account"),
                 SizedBox(height: 50),
                 OauthButton(
-                  iconPath: "assets/google_icon.png",
-                  text: "Continue with Google",
-                  onPressed: () async {
-                    oauthC.google();
-                  },
-                ),
+                    iconPath: "assets/google_icon.png",
+                    text: "Continue with Google",
+                    onPressed: () => authC.google()),
                 SizedBox(height: 15),
                 OauthButton(
-                  iconPath: "assets/facebook_icon.png",
-                  text: "Continue with Facebook",
-                  onPressed: () async {
-                    oauthC.facebook();
-                  },
-                ),
+                    iconPath: "assets/facebook_icon.png",
+                    text: "Continue with Facebook",
+                    onPressed: () => authC.facebook()),
                 SizedBox(height: 15),
                 OauthButton(
-                  iconPath: "assets/github_icon.png",
-                  text: "Continue with GitHub",
-                  onPressed: () async {
-                    oauthC.github(context);
-                  },
-                ),
+                    iconPath: "assets/github_icon.png",
+                    text: "Continue with GitHub",
+                    onPressed: () => authC.github(context)),
                 SizedBox(height: 50),
                 FullWidthButton(
-                  type: FullWidthButtonType.primary,
-                  text: "Sign Up",
-                  onPressed: () {
-                    Get.to(() => SignUp());
-                  },
-                ),
+                    type: FullWidthButtonType.primary,
+                    text: "Sign Up",
+                    onPressed: () => Get.to(() => SignUp())),
                 SizedBox(height: 15),
                 FullWidthButton(
-                  type: FullWidthButtonType.secondary,
-                  text: "Sign In",
-                  onPressed: () {
-                    Get.to(() => SignIn());
-                  },
-                ),
+                    type: FullWidthButtonType.secondary,
+                    text: "Sign In",
+                    onPressed: () => Get.to(() => SignIn())),
                 SizedBox(height: 50),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

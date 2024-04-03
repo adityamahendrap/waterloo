@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:waterloo/app/controllers/oauth_controller.dart';
+import 'package:waterloo/app/controllers/base/auth_controller.dart';
 import 'package:waterloo/app/controllers/sign_up_controller.dart';
 import 'package:waterloo/app/screens/sign_in.dart';
 import 'package:waterloo/app/utils/AppSnackBar.dart';
@@ -12,7 +12,7 @@ import 'package:waterloo/app/widgets/text_title.dart';
 class SignUp extends StatelessWidget {
   SignUp({Key? key}) : super(key: key);
 
-  final oauthC = OAuthController();
+  final authC = Get.find<AuthController>();
   final signUpC = Get.put(SignUpController());
   final signUpValidator = SignUpValidator();
 
@@ -110,9 +110,7 @@ class SignUp extends StatelessWidget {
                 children: [
                   Text("Already have an account?"),
                   TextButton(
-                    onPressed: () {
-                      Get.off(() => SignIn());
-                    },
+                    onPressed: () => Get.off(() => SignIn()),
                     style: ButtonStyle(
                       padding: MaterialStateProperty.all(EdgeInsets.zero),
                     ),
@@ -130,28 +128,19 @@ class SignUp extends StatelessWidget {
               HorizontalDivider(text: "or"),
               SizedBox(height: 25),
               OauthButton(
-                iconPath: "assets/google_icon.png",
-                text: "Continue with Google",
-                onPressed: () async {
-                  oauthC.google();
-                },
-              ),
+                  iconPath: "assets/google_icon.png",
+                  text: "Continue with Google",
+                  onPressed: () => authC.google()),
               SizedBox(height: 15),
               OauthButton(
-                iconPath: "assets/facebook_icon.png",
-                text: "Continue with Facebook",
-                onPressed: () async {
-                  oauthC.facebook();
-                },
-              ),
+                  iconPath: "assets/facebook_icon.png",
+                  text: "Continue with Facebook",
+                  onPressed: () => authC.facebook()),
               SizedBox(height: 15),
               OauthButton(
-                iconPath: "assets/github_icon.png",
-                text: "Continue with GitHub",
-                onPressed: () async {
-                  oauthC.github(context);
-                },
-              ),
+                  iconPath: "assets/github_icon.png",
+                  text: "Continue with GitHub",
+                  onPressed: () => authC.github(context)),
               SizedBox(height: 100),
             ],
           ),

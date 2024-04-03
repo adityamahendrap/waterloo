@@ -1,55 +1,12 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:color_log/color_log.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:water_bottle/water_bottle.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:waterloo/app/utils/helpless.dart';
-
-class DrinkModel {
-  late double amount;
-  late String type;
-  late DateTime datetime;
-
-  DrinkModel({
-    required this.amount,
-    required this.type,
-    required this.datetime,
-  });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'amount': amount,
-      'type': type,
-      'datetime': datetime,
-    };
-  }
-}
-
-class WaterModel {
-  late String user_id;
-  late List<DrinkModel> drinks;
-  late DateTime datetime;
-
-  WaterModel({
-    required this.user_id,
-    required this.drinks,
-    required this.datetime,
-  });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'user_id': user_id,
-      'drinks': drinks.map((e) => e.toMap()).toList(),
-      'datetime': datetime,
-    };
-  }
-}
 
 class WaterController extends GetxController {
   final dailyGoal = 0.0.obs;
@@ -92,16 +49,6 @@ class WaterController extends GetxController {
 
       clog.debug("totalWaterToday: ${currentWater.value}");
     }
-
-    // currentWater.value = waterToday!["drinks"]
-    //         .map((e) => DrinkModel(
-    //               amount: e["amount"],
-    //               type: e["type"],
-    //               datetime: e["datetime"].toDate(),
-    //             ))
-    //         .fold(0, (previousValue, element) => previousValue + element.amount)
-    //     as double;
-    // clog.debug("currentWater: ${currentWater.value}");
   }
 
   void drinkWater(double amount) async {
@@ -185,5 +132,45 @@ class WaterController extends GetxController {
     }
 
     await fetchWaterToday();
+  }
+}
+
+class DrinkModel {
+  late double amount;
+  late String type;
+  late DateTime datetime;
+
+  DrinkModel({
+    required this.amount,
+    required this.type,
+    required this.datetime,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'amount': amount,
+      'type': type,
+      'datetime': datetime,
+    };
+  }
+}
+
+class WaterModel {
+  late String user_id;
+  late List<DrinkModel> drinks;
+  late DateTime datetime;
+
+  WaterModel({
+    required this.user_id,
+    required this.drinks,
+    required this.datetime,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'user_id': user_id,
+      'drinks': drinks.map((e) => e.toMap()).toList(),
+      'datetime': datetime,
+    };
   }
 }

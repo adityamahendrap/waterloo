@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:waterloo/app/controllers/oauth_controller.dart';
+import 'package:waterloo/app/controllers/base/auth_controller.dart';
 import 'package:waterloo/app/controllers/sign_in_controller.dart';
 import 'package:waterloo/app/screens/forgot_password/send_otp_code.dart';
 import 'package:waterloo/app/screens/home.dart';
@@ -16,7 +16,7 @@ import 'package:waterloo/app/widgets/text_title.dart';
 class SignIn extends StatelessWidget {
   SignIn({Key? key}) : super(key: key);
 
-  final oauthC = OAuthController();
+  final authC = Get.find<AuthController>();
   final signInC = Get.put(SignInController());
   final signInValidator = SignInValidator();
 
@@ -125,28 +125,19 @@ class SignIn extends StatelessWidget {
               HorizontalDivider(text: "or"),
               SizedBox(height: 25),
               OauthButton(
-                iconPath: "assets/google_icon.png",
-                text: "Continue with Google",
-                onPressed: () async {
-                  oauthC.google();
-                },
-              ),
+                  iconPath: "assets/google_icon.png",
+                  text: "Continue with Google",
+                  onPressed: () => authC.google()),
               SizedBox(height: 15),
               OauthButton(
-                iconPath: "assets/facebook_icon.png",
-                text: "Continue with Facebook",
-                onPressed: () async {
-                  oauthC.facebook();
-                },
-              ),
+                  iconPath: "assets/facebook_icon.png",
+                  text: "Continue with Facebook",
+                  onPressed: () => authC.facebook()),
               SizedBox(height: 15),
               OauthButton(
-                iconPath: "assets/github_icon.png",
-                text: "Continue with GitHub",
-                onPressed: () async {
-                  oauthC.github(context);
-                },
-              ),
+                  iconPath: "assets/github_icon.png",
+                  text: "Continue with GitHub",
+                  onPressed: () => authC.github(context)),
               SizedBox(height: 100),
             ],
           ),

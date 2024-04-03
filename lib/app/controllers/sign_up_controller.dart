@@ -1,12 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:waterloo/app/controllers/auth_controller.dart';
+import 'package:waterloo/app/controllers/base/auth_controller.dart';
 import 'package:waterloo/app/screens/personalization/1_gender.dart';
 import 'package:waterloo/app/services/auth_service.dart';
 import 'package:waterloo/app/utils/AppSnackBar.dart';
 
-class SignUpController extends GetxController with AuthController {
+class SignUpController extends GetxController {
+  final authC = Get.find<AuthController>();
   final signUpFormKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -46,9 +47,9 @@ class SignUpController extends GetxController with AuthController {
       final UserCredential credential = await AuthService.signUpWithEmail(
           emailController.text, passwordController.text);
 
-      final user = await checkOrCreateUser(credential);
-      cacheUser(user);
-      redirect(user);
+      final user = await AuthService.checkOrCreateUser(credential);
+      authC.cacheUser(user);
+      authC.afterSignRedirect(user);
     } on FirebaseAuthException catch (e) {
       print(e);
       AppSnackBar.error("Failed", e.message!);

@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:waterloo/app/controllers/nav_controller.dart';
-import 'package:waterloo/app/controllers/water_controller.dart';
+import 'package:waterloo/app/controllers/base/water_controller.dart';
 import 'package:waterloo/app/widgets/main_appbarr.dart';
 import 'package:water_bottle/water_bottle.dart';
 
@@ -21,8 +21,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final waterC = Get.put(WaterController());
-  final navC = Get.put(NavController());
+  final waterC = Get.find<WaterController>();
+  final navC = Get.find<NavController>();
 
   @override
   void dispose() {

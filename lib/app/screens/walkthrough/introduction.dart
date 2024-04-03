@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:waterloo/app/repository/auth_repo.dart';
+import 'package:waterloo/app/controllers/base/auth_controller.dart';
 import 'package:waterloo/app/screens/get_started.dart';
 import 'package:lottie/lottie.dart';
 
@@ -14,7 +14,7 @@ class Introduction extends StatelessWidget {
       body: IntroductionScreen(
         pages: listPagesViewModel,
         onDone: () {
-          Get.find<AuthRepository>().box.write('isFirstTime', false);
+          Get.find<AuthController>().box.write('isFirstTime', false);
           Get.offAll(() => GetStarted());
         },
         showSkipButton: true,

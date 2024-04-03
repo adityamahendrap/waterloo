@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:waterloo/app/controllers/auth_controller.dart';
+import 'package:waterloo/app/controllers/base/auth_controller.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
