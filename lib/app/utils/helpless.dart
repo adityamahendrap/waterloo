@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:color_log/color_log.dart';
 
 class HelplessUtil {
@@ -5,5 +6,19 @@ class HelplessUtil {
     return date1.year == date2.year &&
         date1.month == date2.month &&
         date1.day == date2.day;
+  }
+
+  static Map<String, DateTime> getStartAndEndOfDay(DateTime date) {
+    final startOfDay = DateTime(date.year, date.month, date.day, 0, 0, 0);
+    final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
+
+    return {
+      'startOfDay': startOfDay,
+      'endOfDay': endOfDay,
+    };
+  }
+
+  static String timestampToIso8601String(Timestamp timestamp) {
+    return timestamp.toDate().toIso8601String();
   }
 }

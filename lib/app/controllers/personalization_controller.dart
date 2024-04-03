@@ -77,6 +77,10 @@ class PersonalizationController extends GetxController {
         .then((value) => print("Personalization Updated"))
         .catchError(
             (error) => print("Failed to update personalization: $error"));
+
+    var cachedUser = box.read("auth");
+    cachedUser = {...cachedUser, 'daily_goal': this.dailyGoal.value};
+    box.write("auth", cachedUser);
   }
 
   double calculateWaterIntake() {

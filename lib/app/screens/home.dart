@@ -33,6 +33,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
+    waterC.fetchWaterToday();
     waterC.setDailyGoal();
 
     WidgetsBinding.instance?.addPostFrameCallback((_) {
@@ -110,108 +111,120 @@ class _HomeState extends State<Home> {
       padding: EdgeInsets.all(20),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "History",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              Directionality(
-                textDirection: TextDirection.rtl,
-                child: ElevatedButton.icon(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    splashFactory: NoSplash.splashFactory,
-                    elevation: 0,
-                    visualDensity: VisualDensity.compact,
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    backgroundColor: Colors.white,
-                  ),
-                  label: Text(
-                    "View All",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.blue,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  icon: Icon(Icons.arrow_back, color: Colors.blue),
-                ),
-              )
-            ],
-          ),
+          _TodayHistoryHeader(),
           Divider(),
-          // Column(
-          //   children: [
-          // SizedBox(height: 10),
-          //     Image.asset("assets/logo_blue.png"),
-          //     SizedBox(height: 20),
-          //     Text("You have no history on water intake today."),
-          //     SizedBox(height: 10),
-          //   ],
-          // ),
-          ListView(
-            shrinkWrap: true,
+          // _TodayHistoryList(),
+          _TodayHistoryEmpty(),
+        ],
+      ),
+    );
+  }
+
+  ListView _TodayHistoryList() {
+    return ListView(
+      shrinkWrap: true,
+      children: [
+        ListTile(
+          contentPadding: EdgeInsets.only(left: 8),
+          leading: Image.asset(
+            "assets/glass-of-water.png",
+            width: 32,
+            height: 32,
+          ),
+          title: Row(
             children: [
-              ListTile(
-                contentPadding: EdgeInsets.only(left: 8),
-                leading: Image.asset(
-                  "assets/glass-of-water.png",
-                  width: 32,
-                  height: 32,
-                ),
-                title: Row(
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Water",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            "15.00 PM",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
+                    Text(
+                      "Water",
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(width: 20),
-                    Row(
-                      children: [
-                        Text(
-                          "200mL",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                        SizedBox(width: 5),
-                        SizedBox(
-                          width: 32,
-                          height: 32,
-                          child: IconButton(
-                            onPressed: () {},
-                            padding: EdgeInsets.all(0.0),
-                            icon: Icon(Icons.more_vert),
-                          ),
-                        )
-                      ],
+                    Text(
+                      "15.00 PM",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
                     ),
                   ],
                 ),
               ),
-              // Divider(),
+              SizedBox(width: 20),
+              Row(
+                children: [
+                  Text(
+                    "200mL",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  SizedBox(width: 5),
+                  SizedBox(
+                    width: 32,
+                    height: 32,
+                    child: IconButton(
+                      onPressed: () {},
+                      padding: EdgeInsets.all(0.0),
+                      icon: Icon(Icons.more_vert),
+                    ),
+                  )
+                ],
+              ),
             ],
           ),
-        ],
-      ),
+        ),
+        // Divider(),
+      ],
+    );
+  }
+
+  Column _TodayHistoryEmpty() {
+    return Column(
+      children: [
+        SizedBox(height: 10),
+        Image.asset("assets/logo_blue.png"),
+        SizedBox(height: 20),
+        Text("You have no history on water intake today."),
+        SizedBox(height: 10),
+      ],
+    );
+  }
+
+  Row _TodayHistoryHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          "History",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        Directionality(
+          textDirection: TextDirection.rtl,
+          child: ElevatedButton.icon(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              splashFactory: NoSplash.splashFactory,
+              elevation: 0,
+              visualDensity: VisualDensity.compact,
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              backgroundColor: Colors.white,
+            ),
+            label: Text(
+              "View All",
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.blue,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            icon: Icon(Icons.arrow_back, color: Colors.blue),
+          ),
+        )
+      ],
     );
   }
 

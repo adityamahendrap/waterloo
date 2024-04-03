@@ -13,31 +13,49 @@ import 'package:waterloo/app/screens/personalization/1_gender.dart';
 import 'package:waterloo/app/services/auth_service.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:waterloo/app/utils/AppSnackBar.dart';
 
 // !! https://firebase.flutter.dev/docs/auth/social
-class OAuthController extends AuthController{
+class OAuthController extends AuthController {
   GetStorage box = GetStorage();
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
+  void _handleErr(dynamic e) {
+    AppSnackBar.error("Failed",
+        e is FirebaseAuthException ? e.message! : "Unknown error occurred");
+  }
+
   void google() async {
-    final UserCredential credential = await AuthService.signInWithGoogle();
-    final user = await checkOrCreateUser(credential);
-    cacheUser(user);
-    redirect(user);
+    try {
+      final UserCredential credential = await AuthService.signInWithGoogle();
+      final user = await checkOrCreateUser(credential);
+      cacheUser(user);
+      redirect(user);
+    } catch (e) {
+      _handleErr(e);
+    }
   }
 
   void facebook() async {
-    final UserCredential credential = await AuthService.signInWithFacebook();
-    final user = await checkOrCreateUser(credential);
-    cacheUser(user);
-    redirect(user);
+    try {
+      final UserCredential credential = await AuthService.signInWithFacebook();
+      final user = await checkOrCreateUser(credential);
+      cacheUser(user);
+      redirect(user);
+    } catch (e) {
+      _handleErr(e);
+    }
   }
 
   void github(BuildContext context) async {
-    final UserCredential credential =
-        await AuthService.signInWithGitHub(context);
-    final user = await checkOrCreateUser(credential);
-    cacheUser(user);
-    redirect(user);
+    try {
+      final UserCredential credential =
+          await AuthService.signInWithGitHub(context);
+      final user = await checkOrCreateUser(credential);
+      cacheUser(user);
+      redirect(user);
+    } catch (e) {
+      _handleErr(e);
+    }
   }
 }

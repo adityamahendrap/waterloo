@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:waterloo/app/repository/auth_repo.dart';
 import 'package:waterloo/app/screens/get_started.dart';
 import 'package:lottie/lottie.dart';
 
@@ -12,7 +13,10 @@ class Introduction extends StatelessWidget {
     return Scaffold(
       body: IntroductionScreen(
         pages: listPagesViewModel,
-        onDone: () => Get.offAll(() => GetStarted()),
+        onDone: () {
+          Get.find<AuthRepository>().box.write('isFirstTime', false);
+          Get.offAll(() => GetStarted());
+        },
         showSkipButton: true,
         skip: Text(
           "Skip",
@@ -38,7 +42,7 @@ class Introduction extends StatelessWidget {
           elevation: 0,
         ),
         done: const Text(
-          "Login",
+          "Start",
           style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
         ),
         doneStyle: ElevatedButton.styleFrom(

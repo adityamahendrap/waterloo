@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:waterloo/app/screens/get_started.dart';
 import 'package:waterloo/app/screens/home.dart';
 import 'package:waterloo/app/screens/personalization/1_gender.dart';
+import 'package:waterloo/app/utils/helpless.dart';
 
 class AuthController {
   final box = GetStorage();
@@ -41,14 +42,17 @@ class AuthController {
       clog.info('user exists');
 
     Map<String, dynamic> user = userSnapshot.data() as Map<String, dynamic>;
+    user['created_at'] =
+        HelplessUtil.timestampToIso8601String(user['created_at'] as Timestamp);
     clog.info('user data: $user');
 
     return user;
   }
 
   void cacheUser(Map<String, dynamic> user) {
+    clog.debug("try to cache user");
     box.write('auth', user);
-    clog.info('user cached');
+    clog.info('user cached: $user');
   }
 
   void redirect(Map<String, dynamic> user) {

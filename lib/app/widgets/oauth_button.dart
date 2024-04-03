@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:waterloo/app/screens/home.dart';
+import 'package:waterloo/app/screens/sign_in.dart';
 
 class OauthButton extends StatelessWidget {
   final String iconPath;
   final String text;
   final Function()? onPressed;
 
-  const OauthButton({
-    Key? key,
-    required this.iconPath,
-    required this.text,
-    this.onPressed
-  }) : super(key: key);
+  const OauthButton(
+      {Key? key, required this.iconPath, required this.text, this.onPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

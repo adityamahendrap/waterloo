@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:color_log/color_log.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:water_bottle/water_bottle.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -53,6 +55,7 @@ class WaterController extends GetxController {
   final dailyGoal = 0.0.obs;
   final currentWater = 0.0.obs;
   final waterLevel = 0.0.obs;
+  final detailWaterToday = {}.obs;
 
   final sphereBottleRef = GlobalKey<SphericalBottleState>();
   final box = GetStorage();
@@ -61,6 +64,44 @@ class WaterController extends GetxController {
   void setDailyGoal() {
     final user = box.read("auth");
     dailyGoal.value = user["daily_goal"];
+  }
+
+  Future<void> fetchWaterToday() async {
+    final user = box.read("auth");
+
+    Map<String, DateTime> day =
+        HelplessUtil.getStartAndEndOfDay(DateTime.now());
+
+    final watersSnapshot = await waters
+        .where("user_id", isEqualTo: user["uid"])
+        .where("datetime",
+            isGreaterThanOrEqualTo: day['startOfDay'],
+            isLessThanOrEqualTo: day['endOfDay'])
+        .limit(1)
+        .get();
+
+    if (watersSnapshot.docs.isNotEmpty) {
+      detailWaterToday.value =
+          watersSnapshot.docs[0].data() as Map<String, dynamic>;
+
+      double tempCurrentWater = 0.0;
+      for (var drink in detailWaterToday.value["drinks"]) {
+        tempCurrentWater += drink["amount"];
+      }
+      currentWater.value = tempCurrentWater;
+
+      clog.debug("totalWaterToday: ${currentWater.value}");
+    }
+
+    // currentWater.value = waterToday!["drinks"]
+    //         .map((e) => DrinkModel(
+    //               amount: e["amount"],
+    //               type: e["type"],
+    //               datetime: e["datetime"].toDate(),
+    //             ))
+    //         .fold(0, (previousValue, element) => previousValue + element.amount)
+    //     as double;
+    // clog.debug("currentWater: ${currentWater.value}");
   }
 
   void drinkWater(double amount) async {
@@ -82,18 +123,14 @@ class WaterController extends GetxController {
 
     final user = box.read("auth");
 
-    DateTime now = DateTime.now();
-    DateTime startOfDay = DateTime(now.year, now.month, now.day, 0, 0, 0);
-    DateTime endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
-
-    clog.debug("now: $now");
-    clog.debug("startOfDay: $startOfDay");
-    clog.debug("endOfDay: $endOfDay");
+    Map<String, DateTime> day =
+        HelplessUtil.getStartAndEndOfDay(DateTime.now());
 
     QuerySnapshot<Object?> todayExistingWaterSnapshot = await waters
         .where("user_id", isEqualTo: user["uid"])
         .where("datetime",
-            isGreaterThanOrEqualTo: startOfDay, isLessThanOrEqualTo: endOfDay)
+            isGreaterThanOrEqualTo: day['startOfDay'],
+            isLessThanOrEqualTo: day['endOfDay'])
         .limit(1)
         .get();
 
@@ -104,7 +141,7 @@ class WaterController extends GetxController {
     }
 
     clog.debug("${todayExistingWater}");
-    clog.debug("todayExistingWaters: $todayExistingWater");
+    clog.debug("todayExistingWater: $todayExistingWater");
 
     if (todayExistingWater != null) {
       final DrinkModel drinkModel = DrinkModel(
@@ -146,5 +183,7 @@ class WaterController extends GetxController {
         throw error;
       });
     }
+
+    await fetchWaterToday();
   }
 }
