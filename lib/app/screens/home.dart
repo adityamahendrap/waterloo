@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:animated_digit/animated_digit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:waterloo/app/constants/beverage_list.dart';
 import 'package:waterloo/app/controllers/nav_controller.dart';
 import 'package:waterloo/app/controllers/base/water_controller.dart';
 import 'package:waterloo/app/screens/cup_size/switch_cup_size.dart';
@@ -120,7 +121,7 @@ class _HomeState extends State<Home> {
                 ? _todayHistoryEmpty()
                 : _todayHistoryList(),
           ),
-          Obx(() => waterC.waterTodayHistory.value!.length > 5
+          Obx(() => (waterC.waterTodayHistory.value?.length ?? 0) > 5
               ? _expandHistoryToggleButton()
               : Container()),
           SizedBox(height: 5)
@@ -242,7 +243,7 @@ class _HomeState extends State<Home> {
         Image.asset("assets/logo_blue.png"),
         SizedBox(height: 20),
         Text("You have no history on water intake today."),
-        SizedBox(height: 10),
+        SizedBox(height: 30),
       ],
     );
   }
@@ -332,10 +333,13 @@ class _HomeState extends State<Home> {
               children: [
                 Obx(
                   () => ElevatedButton(
-                    onPressed: () =>
-                        waterC.isDrinking.value ? null : waterC.drinkWater(200),
+                    onPressed: () => waterC.isDrinking.value
+                        ? null
+                        : waterC.drinkWater(waterC.selectedCupAmount.value),
                     child: Text(
-                      waterC.isDrinking.value ? "Drinking..." : "Drink (200mL)",
+                      waterC.isDrinking.value
+                          ? "Drinking..."
+                          : "Drink (${waterC.selectedCupAmount.value.toInt()}mL)",
                       style: TextStyle(
                         color: waterC.isDrinking.value
                             ? Colors.blue
@@ -369,7 +373,13 @@ class _HomeState extends State<Home> {
                       icon: SizedBox(
                         width: 24,
                         height: 24,
-                        child: Image.asset("assets/glass-of-water.png"),
+                        child: Image.asset(
+                          waterC.selectedCupType.value == 'Water'
+                              ? "assets/glass-of-water.png"
+                              : beverages.firstWhere((e) =>
+                                  e["name"] ==
+                                  waterC.selectedCupType.value)["image"]!,
+                        ),
                       ),
                     ),
                     Positioned(

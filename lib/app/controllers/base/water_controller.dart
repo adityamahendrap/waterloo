@@ -10,12 +10,15 @@ import 'package:waterloo/app/utils/helpless.dart';
 
 class WaterController extends GetxController {
   final isDrinking = false.obs;
-  final dailyGoal = 0.0.obs;
   final currentWater = 0.0.obs; // total mL water drinked today
   final waterLevel = 0.0.obs; // percentage of water in bottle
+  final dailyGoal = 0.0.obs;
+
+  final selectedCupType = 'Water'.obs;
+  final selectedCupAmount = 200.0.obs;
+
   final detailWaterToday = Rxn<Map<String, dynamic>>();
   final waterTodayHistory = Rxn<List<Map<String, dynamic>>>();
-
   final isWaterHistoryTodayExpanded = false.obs;
 
   final sphereBottleRef = GlobalKey<SphericalBottleState>();
@@ -25,6 +28,13 @@ class WaterController extends GetxController {
   void setDailyGoal() {
     final user = box.read("auth");
     dailyGoal.value = user["daily_goal"] ?? 0.0;
+  }
+
+  void switchCupSize(double amount, String type) {
+    selectedCupType.value = type;
+    selectedCupAmount.value = amount;
+    clog.debug("selectedCupType: ${selectedCupType.value}");
+    clog.debug("selectedCupAmount: ${selectedCupAmount.value}");
   }
 
   Future<void> fetchWaterToday() async {
@@ -126,7 +136,7 @@ class WaterController extends GetxController {
     if (todayExistingWater != null) {
       final DrinkModel drinkModel = DrinkModel(
         amount: amount,
-        type: "Water",
+        type: selectedCupType.value,
         datetime: DateTime.now(),
       );
 
@@ -148,7 +158,7 @@ class WaterController extends GetxController {
         drinks: [
           DrinkModel(
             amount: amount,
-            type: "water",
+            type: selectedCupType.value,
             datetime: DateTime.now(),
           )
         ],

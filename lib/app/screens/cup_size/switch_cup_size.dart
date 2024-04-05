@@ -4,10 +4,14 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:waterloo/app/constants/beverage_list.dart';
+import 'package:waterloo/app/constants/cup_size_list.dart';
+import 'package:waterloo/app/controllers/base/water_controller.dart';
 import 'package:waterloo/app/widgets/full_width_button.dart';
 
 class SwitchCupSize extends StatelessWidget {
-  const SwitchCupSize({super.key});
+  SwitchCupSize({super.key});
+
+  final waterC = Get.find<WaterController>();
 
   @override
   Widget build(BuildContext context) {
@@ -34,19 +38,19 @@ class SwitchCupSize extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _waterCupSizeList(),
+            _waterCupSizeList(context),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Text("Or Drink"),
             ),
-            _beverageList(),
+            _beverageList(context),
           ],
         ),
       ),
     );
   }
 
-  GridView _waterCupSizeList() {
+  GridView _waterCupSizeList(BuildContext context) {
     return GridView.count(
       shrinkWrap: true,
       primary: false,
@@ -55,13 +59,31 @@ class SwitchCupSize extends StatelessWidget {
       mainAxisSpacing: 20,
       crossAxisCount: 4,
       childAspectRatio: 1 / 1.2,
-      children: <Widget>[
-        // _Item(),
+      children: [
+        ...cupSizes.map((cupSize) {
+          return _Item(
+            text: "${cupSize["amount"]} mL",
+            image: cupSize["image"] as String,
+            onPressed: () {
+              waterC.switchCupSize(
+                (cupSize["amount"] as int).toDouble(),
+                'Water',
+              );
+              Get.back();
+            },
+          );
+        }).toList(),
+        _Item(
+          text: 'Add New',
+          icon: Icons.add,
+          onPressed: () =>
+              _bottomSheet(context, 'Water', 'assets/glass-of-water.png'),
+        ),
       ],
     );
   }
 
-  GridView _beverageList() {
+  GridView _beverageList(BuildContext context) {
     return GridView.count(
       shrinkWrap: true,
       primary: false,
@@ -69,50 +91,23 @@ class SwitchCupSize extends StatelessWidget {
       crossAxisSpacing: 20,
       mainAxisSpacing: 20,
       crossAxisCount: 4,
-      childAspectRatio: 1 / 1.5,
+      childAspectRatio: 1 / 1.2,
       children: beverages
           .map((beverage) => _Item(
                 text: beverage["name"] as String,
                 image: beverage["image"] as String,
+                onPressed: () => _bottomSheet(
+                  context,
+                  beverage["name"] as String,
+                  beverage["image"] as String,
+                ),
               ))
           .toList(),
     );
   }
-}
 
-class _Item extends StatelessWidget {
-  final String text;
-  final String image;
-
-  _Item({
-    super.key,
-    required this.text,
-    required this.image,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        IconButton.outlined(
-          padding: EdgeInsets.all(18),
-          icon: Image.asset(this.image),
-          style: OutlinedButton.styleFrom(
-            shape: CircleBorder(),
-            side: BorderSide(color: Colors.grey.shade300),
-          ),
-          onPressed: () {
-            _bottomSheet(context);
-          },
-        ),
-        SizedBox(height: 10),
-        Expanded(child: Text(this.text)),
-      ],
-    );
-  }
-
-  Future<dynamic> _bottomSheet(BuildContext context) {
+  Future<dynamic> _bottomSheet(
+      BuildContext context, String type, String image) {
     return showMaterialModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -130,7 +125,7 @@ class _Item extends StatelessWidget {
               SizedBox(height: 10),
               Container(height: 4, width: 50, color: Colors.grey.shade300),
               SizedBox(height: 20),
-              Text("Drinking Coffee",
+              Text("Drinking $type",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
               SizedBox(height: 20),
               Divider(thickness: 0.5),
@@ -138,7 +133,7 @@ class _Item extends StatelessWidget {
               SizedBox(
                 height: 64,
                 width: 64,
-                child: Image.asset("assets/glass-of-water.png"),
+                child: Image.asset(image),
               ),
               SizedBox(height: 30),
               TextField(
@@ -177,6 +172,57 @@ class _Item extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _Item extends StatelessWidget {
+  final String text;
+  final String? image;
+  final IconData? icon;
+  final Function()? onPressed;
+
+  _Item({
+    required this.text,
+    this.image,
+    this.icon,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton.outlined(
+          padding: EdgeInsets.all(18),
+          icon: image != null
+              ? Image.asset(
+                  image!,
+                  width: 32,
+                  height: 32,
+                )
+              : Icon(
+                  icon!,
+                  size: 32,
+                  color: Colors.blue.shade300,
+                ),
+          iconSize: 24,
+          style: OutlinedButton.styleFrom(
+            shape: CircleBorder(),
+            side: BorderSide(color: Colors.grey.shade300),
+          ),
+          onPressed: this.onPressed,
+        ),
+        SizedBox(height: 10),
+        Expanded(
+          child: Text(
+            this.text,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
     );
   }
 }
