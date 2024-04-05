@@ -19,13 +19,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final waterC = Get.put(WaterController());
   final navC = Get.put(NavController());
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  final waterC = Get.put(WaterController());
 
   @override
   void initState() {
@@ -178,7 +173,10 @@ class _HomeState extends State<Home> {
         ListTile(
           contentPadding: EdgeInsets.only(left: 8),
           leading: Image.asset(
-            "assets/glass-of-water.png",
+            item["type"] == "Water"
+                ? "assets/glass-of-water.png"
+                : beverages
+                    .firstWhere((e) => e["name"] == item["type"])["image"]!,
             width: 32,
             height: 32,
           ),
@@ -240,8 +238,11 @@ class _HomeState extends State<Home> {
     return Column(
       children: [
         SizedBox(height: 20),
-        Image.asset("assets/logo_blue.png"),
-        SizedBox(height: 20),
+        SizedBox(
+          width: 100,
+          child: Image.asset("assets/empty.png"),
+        ),
+        Container(child: SizedBox(height: 20)),
         Text("You have no history on water intake today."),
         SizedBox(height: 30),
       ],
@@ -373,12 +374,14 @@ class _HomeState extends State<Home> {
                       icon: SizedBox(
                         width: 24,
                         height: 24,
-                        child: Image.asset(
-                          waterC.selectedCupType.value == 'Water'
-                              ? "assets/glass-of-water.png"
-                              : beverages.firstWhere((e) =>
-                                  e["name"] ==
-                                  waterC.selectedCupType.value)["image"]!,
+                        child: Obx(
+                          () => Image.asset(
+                            waterC.selectedCupType.value == 'Water'
+                                ? "assets/glass-of-water.png"
+                                : beverages.firstWhere((e) =>
+                                    e["name"] ==
+                                    waterC.selectedCupType.value)["image"]!,
+                          ),
                         ),
                       ),
                     ),

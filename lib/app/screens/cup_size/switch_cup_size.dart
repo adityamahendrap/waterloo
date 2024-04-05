@@ -8,6 +8,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:waterloo/app/constants/beverage_list.dart';
 import 'package:waterloo/app/constants/cup_size_list.dart';
 import 'package:waterloo/app/controllers/base/water_controller.dart';
+import 'package:waterloo/app/screens/home.dart';
 import 'package:waterloo/app/widgets/full_width_button.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
@@ -165,7 +166,30 @@ class _SwitchCupSizeState extends State<SwitchCupSize> {
                 SizedBox(height: 20),
                 Divider(thickness: 0.5),
                 SizedBox(height: 20),
-                _buttons(),
+                Row(
+                  children: [
+                    Expanded(
+                      child: FullWidthButton(
+                        type: FullWidthButtonType.secondary,
+                        text: "Cancel",
+                        onPressed: () => Get.back(),
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: FullWidthButton(
+                        type: FullWidthButtonType.primary,
+                        text: "OK",
+                        onPressed: () {
+                          waterC.switchCupSize(
+                              double.parse(amountController.text), type);
+                          Get.back();
+                          Get.back();
+                        },
+                      ),
+                    )
+                  ],
+                ),
                 SizedBox(height: 20),
                 _keyboardVisibilityController.isVisible
                     ? SizedBox(height: MediaQuery.of(context).viewInsets.bottom)
@@ -175,28 +199,6 @@ class _SwitchCupSizeState extends State<SwitchCupSize> {
           ),
         ),
       ),
-    );
-  }
-
-  Row _buttons() {
-    return Row(
-      children: [
-        Expanded(
-          child: FullWidthButton(
-            type: FullWidthButtonType.secondary,
-            text: "Cancel",
-            onPressed: () {},
-          ),
-        ),
-        SizedBox(width: 20),
-        Expanded(
-          child: FullWidthButton(
-            type: FullWidthButtonType.primary,
-            text: "OK",
-            onPressed: () {},
-          ),
-        )
-      ],
     );
   }
 

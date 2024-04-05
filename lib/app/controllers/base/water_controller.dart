@@ -29,7 +29,7 @@ class WaterController extends GetxController {
     final user = box.read("auth");
     dailyGoal.value = user["daily_goal"] ?? 0.0;
   }
-
+  
   void switchCupSize(double amount, String type) {
     selectedCupType.value = type;
     selectedCupAmount.value = amount;
