@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -8,10 +9,22 @@ import 'package:waterloo/app/constants/cup_size_list.dart';
 import 'package:waterloo/app/controllers/base/water_controller.dart';
 import 'package:waterloo/app/widgets/full_width_button.dart';
 
-class SwitchCupSize extends StatelessWidget {
+class SwitchCupSize extends StatefulWidget {
   SwitchCupSize({super.key});
 
+  @override
+  State<SwitchCupSize> createState() => _SwitchCupSizeState();
+}
+
+class _SwitchCupSizeState extends State<SwitchCupSize> {
   final waterC = Get.find<WaterController>();
+  TextEditingController amountController = TextEditingController(text: "200");
+
+  @override
+  void dispose() {
+    amountController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,60 +129,100 @@ class SwitchCupSize extends StatelessWidget {
           topRight: Radius.circular(20),
         ),
       ),
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.5,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              SizedBox(height: 10),
-              Container(height: 4, width: 50, color: Colors.grey.shade300),
-              SizedBox(height: 20),
-              Text("Drinking $type",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
-              SizedBox(height: 20),
-              Divider(thickness: 0.5),
-              SizedBox(height: 30),
-              SizedBox(
-                height: 64,
-                width: 64,
-                child: Image.asset(image),
-              ),
-              SizedBox(height: 30),
-              TextField(
-                decoration: InputDecoration(
-                  fillColor: Colors.grey.shade50,
-                  hintText: "Enter the amount",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.grey.shade50),
-                  ),
+      builder: (context) => SingleChildScrollView(
+        child: Container(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                SizedBox(height: 10),
+                Container(height: 4, width: 50, color: Colors.grey.shade300),
+                SizedBox(height: 20),
+                Text(
+                  "Drinking $type",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                 ),
-              ),
-              SizedBox(height: 20),
-              Divider(thickness: 0.5),
-              SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                    child: FullWidthButton(
-                      type: FullWidthButtonType.secondary,
-                      text: "Cancel",
-                      onPressed: () {},
-                    ),
-                  ),
-                  SizedBox(width: 20),
-                  Expanded(
-                    child: FullWidthButton(
-                      type: FullWidthButtonType.primary,
-                      text: "OK",
-                      onPressed: () {},
-                    ),
-                  )
-                ],
-              )
-            ],
+                SizedBox(height: 20),
+                Divider(thickness: 0.8),
+                SizedBox(height: 20),
+                SizedBox(
+                  height: 64,
+                  width: 64,
+                  child: Image.asset(image),
+                ),
+                SizedBox(height: 30),
+                _amountInput(),
+                SizedBox(height: 20),
+                Divider(thickness: 0.5),
+                SizedBox(height: 20),
+                _buttons(),
+                SizedBox(height: 20)
+              ],
+            ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Row _buttons() {
+    return Row(
+      children: [
+        Expanded(
+          child: FullWidthButton(
+            type: FullWidthButtonType.secondary,
+            text: "Cancel",
+            onPressed: () {},
+          ),
+        ),
+        SizedBox(width: 20),
+        Expanded(
+          child: FullWidthButton(
+            type: FullWidthButtonType.primary,
+            text: "OK",
+            onPressed: () {},
+          ),
+        )
+      ],
+    );
+  }
+
+  TextField _amountInput() {
+    return TextField(
+      controller: amountController,
+      keyboardType: TextInputType.number,
+      style: TextStyle(
+        fontSize: 64,
+        fontWeight: FontWeight.bold,
+        color: Colors.blue,
+        height: 1,
+      ),
+      textAlign: TextAlign.center,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+      ],
+      cursorColor: Colors.blue,
+      cursorWidth: 7,
+      cursorRadius: Radius.circular(20),
+      decoration: InputDecoration(
+        fillColor: Colors.grey.shade100,
+        filled: true,
+        contentPadding:
+            EdgeInsets.only(right: 20, top: 30, bottom: 30, left: 60),
+        suffix: Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: Text("mL",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
+        ),
+        hintText: "100",
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey.shade400, width: 1.0),
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey.shade400, width: 1.0),
         ),
       ),
     );
