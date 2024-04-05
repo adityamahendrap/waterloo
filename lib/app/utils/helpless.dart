@@ -27,4 +27,10 @@ class HelplessUtil {
     final DateTime dateTime = DateTime.parse(iso8601String);
     return DateFormat.Hm().format(dateTime);
   }
+
+  static getDateFromIso8601String(String iso8601String) {
+    final DateTime dateTime = DateTime.parse(iso8601String);
+    // Dec 20, 2021
+    return DateFormat.yMMMd().format(dateTime);
+  }
 }
