@@ -41,7 +41,7 @@ class AgePersonalization extends StatelessWidget {
                         items: numbers,
                         selectedItem: personalizationC.age,
                         onSelectedItemChanged: (index) {
-                          personalizationC.setAge(numbers[index]);
+                          personalizationC.age.value = numbers[index];
                         },
                       ),
                       ListWheelInputStripe(),

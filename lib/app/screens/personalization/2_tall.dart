@@ -56,7 +56,7 @@ class TallPersonalization extends StatelessWidget {
                           child: ListWheelInput(
                             items: numbers,
                             onSelectedItemChanged: (index) {
-                              personalizationC.setTall(numbers[index]);
+                              personalizationC.tall.value = numbers[index];
                             },
                             selectedItem: personalizationC.tall,
                           ),

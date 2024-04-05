@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:color_log/color_log.dart';
+import 'package:intl/intl.dart';
 
 class HelplessUtil {
   static bool isSameDate(DateTime date1, DateTime date2) {
@@ -20,5 +21,10 @@ class HelplessUtil {
 
   static String timestampToIso8601String(Timestamp timestamp) {
     return timestamp.toDate().toIso8601String();
+  }
+
+  static getHourMinuteFromIso8601String(String iso8601String) {
+    final DateTime dateTime = DateTime.parse(iso8601String);
+    return DateFormat.Hm().format(dateTime);
   }
 }

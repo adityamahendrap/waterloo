@@ -46,9 +46,10 @@ class GoToBedPersonalization extends StatelessWidget {
                         ListWheelInputStripe(),
                         ListWheelInput(
                           items: hours,
-                          selectedItem: personalizationC.go_bed_time_hour,
+                          selectedItem: personalizationC.goBedTimeHour,
                           onSelectedItemChanged: (index) {
-                            personalizationC.setGoBedTimeHour(hours[index]);
+                            personalizationC.goBedTimeHour.value =
+                                hours[index];
                           },
                         ),
                       ],
@@ -62,9 +63,10 @@ class GoToBedPersonalization extends StatelessWidget {
                         ListWheelInputStripe(),
                         ListWheelInput(
                           items: minutes,
-                          selectedItem: personalizationC.go_bed_time_minute,
+                          selectedItem: personalizationC.goBedTimeMinute,
                           onSelectedItemChanged: (index) {
-                            personalizationC.setGoBedTimeMinute(minutes[index]);
+                            personalizationC.goBedTimeMinute.value =
+                                minutes[index];
                           },
                         ),
                       ],

@@ -19,6 +19,7 @@ class AuthController extends GetxController {
   @override
   void onReady() {
     FlutterNativeSplash.remove();
+    clog.debug('userCache when app started: ${box.read('auth')}');
     _afterSplashScreenRedirect();
   }
 

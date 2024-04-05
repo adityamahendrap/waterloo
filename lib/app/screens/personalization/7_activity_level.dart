@@ -71,9 +71,9 @@ class ActicityLabelPersonalization extends StatelessWidget {
                       primaryText: item['primaryText'],
                       secondaryText: item['secondaryText'],
                       level: item['level'],
-                      selectedLevel: personalizationC.activity_level,
+                      selectedLevel: personalizationC.activityLevel,
                       onPressed: () {
-                        personalizationC.setActivityLevel(item["level"]);
+                        personalizationC.activityLevel.value = item["level"];
                       },
                     ),
                     SizedBox(height: 20)
@@ -87,7 +87,7 @@ class ActicityLabelPersonalization extends StatelessWidget {
             context: context,
             text: "Continue",
             onPressed: () {
-              if (personalizationC.activity_level.value == 0) {
+              if (personalizationC.activityLevel.value == 0) {
                 AppSnackBar.error("Failed", "Please select an activity level");
                 return;
               }

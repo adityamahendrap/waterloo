@@ -54,7 +54,7 @@ class WeightPersonalization extends StatelessWidget {
                         child: ListWheelInput(
                           items: numbers,
                           onSelectedItemChanged: (index) {
-                            personalizationC.setWeight(numbers[index]);
+                            personalizationC.weight.value = numbers[index];
                           },
                           selectedItem: personalizationC.weight,
                         ),

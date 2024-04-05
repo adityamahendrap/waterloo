@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:color_log/color_log.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -21,6 +22,51 @@ class Weather {
   static const String COLD = "Cold";
 }
 
+class PersonalizationModel {
+  late String gender;
+  late int tall;
+  late int weight;
+  late int age;
+  late int wakeUpTimeHour;
+  late int wakeUpTimeMinute;
+  late int goBedTimeHour;
+  late int goBedTimeMinute;
+  late int activityLevel;
+  late String weather;
+
+  PersonalizationModel({
+    required this.gender,
+    required this.tall,
+    required this.weight,
+    required this.age,
+    required this.wakeUpTimeHour,
+    required this.wakeUpTimeMinute,
+    required this.goBedTimeHour,
+    required this.goBedTimeMinute,
+    required this.activityLevel,
+    required this.weather,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'gender': gender,
+      'tall': tall,
+      'weight': weight,
+      'age': age,
+      'wake_up_time': {
+        'hour': wakeUpTimeHour,
+        'minute': wakeUpTimeMinute,
+      },
+      'go_bed_time': {
+        'hour': goBedTimeHour,
+        'minute': goBedTimeMinute,
+      },
+      'activityLevel': activityLevel,
+      'weather': weather,
+    };
+  }
+}
+
 class PersonalizationController extends GetxController {
   GetStorage box = GetStorage();
 
@@ -28,59 +74,48 @@ class PersonalizationController extends GetxController {
   final tall = 170.obs;
   final weight = 50.obs;
   final age = 20.obs;
-  final wake_up_time_hour = 0.obs;
-  final wake_up_time_minute = 0.obs;
-  final go_bed_time_hour = 0.obs;
-  final go_bed_time_minute = 0.obs;
-  final activity_level = 0.obs;
+  final wakeUpTimeHour = 0.obs;
+  final wakeUpTimeMinute = 0.obs;
+  final goBedTimeHour = 0.obs;
+  final goBedTimeMinute = 0.obs;
+  final activityLevel = 0.obs;
   final weather = "".obs;
   final dailyGoal = 0.0.obs;
-
-  void setGender(String value) => gender.value = value;
-  void setTall(int value) => tall.value = value;
-  void setWeight(int value) => weight.value = value;
-  void setAge(int value) => age.value = value;
-  void setActivityLevel(int value) => activity_level.value = value;
-  void setWeather(String value) => weather.value = value;
-  void setWakeUpTimeHour(int value) => wake_up_time_hour.value = value;
-  void setWakeUpTimeMinute(int value) => wake_up_time_minute.value = value;
-  void setGoBedTimeHour(int value) => go_bed_time_hour.value = value;
-  void setGoBedTimeMinute(int value) => go_bed_time_minute.value = value;
-  void setDailyGoal(double value) => dailyGoal.value = value;
 
   void savePersonalization() {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
 
     final Map<String, dynamic> user = box.read('auth');
 
+    final personalizationM = PersonalizationModel(
+      gender: this.gender.value,
+      tall: this.tall.value,
+      weight: this.weight.value,
+      age: this.age.value,
+      goBedTimeHour: this.wakeUpTimeHour.value,
+      goBedTimeMinute: this.wakeUpTimeMinute.value,
+      wakeUpTimeHour: this.goBedTimeHour.value,
+      wakeUpTimeMinute: this.goBedTimeMinute.value,
+      activityLevel: this.activityLevel.value,
+      weather: this.weather.value,
+    );
+
+    final newData = {
+      'personalization': personalizationM.toMap(),
+      'daily_goal': this.dailyGoal.value,
+    };
+
     users
         .doc(user['uid'])
-        .update({
-          'personalization': {
-            'gender': this.gender.value,
-            'tall': this.tall.value,
-            'weight': this.weight.value,
-            'age': this.age.value,
-            'wake_up_time': {
-              'hour': this.wake_up_time_hour.value,
-              'minute': this.wake_up_time_minute.value,
-            },
-            'go_bed_time': {
-              'hour': this.go_bed_time_hour.value,
-              'minute': this.go_bed_time_minute.value,
-            },
-            'activity_level': this.activity_level.value,
-            'weather': this.weather.value,
-          },
-          'daily_goal': this.dailyGoal.value,
-        })
-        .then((value) => print("Personalization Updated"))
+        .update(newData)
+        .then((value) => clog.info("Personalization Updated"))
         .catchError(
-            (error) => print("Failed to update personalization: $error"));
+            (error) => clog.error("Failed to update personalization: $error"));
 
     var cachedUser = box.read("auth");
-    cachedUser = {...cachedUser, 'daily_goal': this.dailyGoal.value};
+    cachedUser = {...cachedUser, ...newData};
     box.write("auth", cachedUser);
+    clog.debug('cached from savePersonalization $cachedUser');
   }
 
   double calculateWaterIntake() {
@@ -101,7 +136,7 @@ class PersonalizationController extends GetxController {
         break;
     }
 
-    switch (this.activity_level.value) {
+    switch (this.activityLevel.value) {
       case ActivityLevel.SEDENTARY:
         result *= 1.2;
         break;

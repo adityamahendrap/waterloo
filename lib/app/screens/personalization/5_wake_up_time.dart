@@ -48,9 +48,10 @@ class WakeUpPersonalization extends StatelessWidget {
                         ListWheelInputStripe(),
                         ListWheelInput(
                           items: hours,
-                          selectedItem: personalizationC.wake_up_time_hour,
+                          selectedItem: personalizationC.wakeUpTimeHour,
                           onSelectedItemChanged: (index) {
-                            personalizationC.setWakeUpTimeHour(hours[index]);
+                            personalizationC.wakeUpTimeHour.value =
+                                hours[index];
                           },
                         ),
                       ],
@@ -64,10 +65,10 @@ class WakeUpPersonalization extends StatelessWidget {
                         ListWheelInputStripe(),
                         ListWheelInput(
                           items: minutes,
-                          selectedItem: personalizationC.wake_up_time_minute,
+                          selectedItem: personalizationC.wakeUpTimeMinute,
                           onSelectedItemChanged: (index) {
-                            personalizationC
-                                .setWakeUpTimeMinute(minutes[index]);
+                            personalizationC.wakeUpTimeMinute.value =
+                                minutes[index];
                           },
                         ),
                       ],

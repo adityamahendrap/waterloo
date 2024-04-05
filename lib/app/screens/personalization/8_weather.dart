@@ -59,7 +59,8 @@ class WeatherPersonalization extends StatelessWidget {
                             primaryText: item['primaryText'],
                             selectedItem: personalizationC.weather,
                             onPressed: () {
-                              personalizationC.setWeather(item['primaryText']);
+                              personalizationC.weather.value =
+                                  item['primaryText'];
                             },
                           ),
                           SizedBox(height: 20)
@@ -83,7 +84,7 @@ class WeatherPersonalization extends StatelessWidget {
               }
 
               double result = personalizationC.calculateWaterIntake();
-              personalizationC.setDailyGoal(result);
+              personalizationC.dailyGoal.value = result;
               personalizationC.savePersonalization();
               Get.offAll(() => DailyGoal());
             },

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:waterloo/app/widgets/main_appbarr.dart';
+import 'package:waterloo/app/widgets/main_appbar.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:intl/intl.dart';

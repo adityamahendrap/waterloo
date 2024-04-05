@@ -15,13 +15,6 @@ class GetStarted extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const spinkit = SpinKitWaveSpinner(
-      color: Colors.white,
-      size: 50.0,
-      waveColor: Colors.blue,
-      trackColor: Colors.blue,
-      curve: Curves.easeInOutCubic,
-    );
     return Scaffold(
       body: ListView(
         padding: EdgeInsets.fromLTRB(20, 100, 20, 20),

@@ -1,17 +1,14 @@
 import 'dart:async';
 
 import 'package:animated_digit/animated_digit.dart';
-import 'package:color_log/color_log.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:waterloo/app/controllers/nav_controller.dart';
 import 'package:waterloo/app/controllers/base/water_controller.dart';
-import 'package:waterloo/app/widgets/main_appbarr.dart';
-import 'package:water_bottle/water_bottle.dart';
+import 'package:waterloo/app/screens/cup_size/switch_cup_size.dart';
+import 'package:waterloo/app/utils/helpless.dart';
+import 'package:waterloo/app/widgets/loading.dart';
+import 'package:waterloo/app/widgets/main_appbar.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -21,8 +18,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final waterC = Get.find<WaterController>();
-  final navC = Get.find<NavController>();
+  final waterC = Get.put(WaterController());
+  final navC = Get.put(NavController());
 
   @override
   void dispose() {
@@ -33,11 +30,12 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
-    waterC.fetchWaterToday();
     waterC.setDailyGoal();
+    waterC.fetchWaterToday();
 
+    // set water level UI default to 0
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      waterC.sphereBottleRef.currentState?.waterLevel = waterC.waterLevel.value;
+      waterC.sphereBottleRef.currentState?.waterLevel = 0;
     });
   }
 
@@ -55,74 +53,126 @@ class _HomeState extends State<Home> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              _WaterCounter(),
+              _waterCounter(),
               SizedBox(height: 20),
-              _TodayHistory(),
+              _todayHistory(),
+              SizedBox(height: 20),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: _BottomNavBar(),
+      bottomNavigationBar: _bottomNavBar(),
     );
   }
 
-  Widget _BottomNavBar() {
-    return Obx(() => BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: navC.selectedIndex.value,
-          selectedItemColor: Colors.blue,
-          onTap: (index) => navC.selectedIndex.value = index,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              label: 'Home',
-              activeIcon: Icon(Icons.home_filled),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.history_outlined),
-              label: 'History',
-              activeIcon: Icon(Icons.history),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.report_outlined),
-              label: 'Report',
-              activeIcon: Icon(Icons.report),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.emoji_events_outlined),
-              label: 'Achievements',
-              activeIcon: Icon(Icons.emoji_events),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle_outlined),
-              label: 'Account',
-              activeIcon: Icon(Icons.account_circle),
-            ),
-          ],
-        ));
-  }
-
-  Container _TodayHistory() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-      ),
-      padding: EdgeInsets.all(20),
-      child: Column(
-        children: [
-          _TodayHistoryHeader(),
-          Divider(),
-          // _TodayHistoryList(),
-          _TodayHistoryEmpty(),
+  Widget _bottomNavBar() {
+    return Obx(
+      () => BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: navC.selectedIndex.value,
+        selectedItemColor: Colors.blue,
+        onTap: (index) => navC.selectedIndex.value = index,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
+            activeIcon: Icon(Icons.home_filled),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history_outlined),
+            label: 'History',
+            activeIcon: Icon(Icons.history),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.report_outlined),
+            label: 'Report',
+            activeIcon: Icon(Icons.report),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.emoji_events_outlined),
+            label: 'Achievements',
+            activeIcon: Icon(Icons.emoji_events),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle_outlined),
+            label: 'Account',
+            activeIcon: Icon(Icons.account_circle),
+          ),
         ],
       ),
     );
   }
 
-  ListView _TodayHistoryList() {
-    return ListView(
-      shrinkWrap: true,
+  Container _todayHistory() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+      ),
+      padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+      child: Column(
+        children: [
+          _todayHistoryHeader(),
+          Divider(),
+          Obx(
+            () => waterC.waterTodayHistory.value == null ||
+                    waterC.waterTodayHistory.value!.isEmpty
+                ? _todayHistoryEmpty()
+                : _todayHistoryList(),
+          ),
+          Obx(() => waterC.waterTodayHistory.value!.length > 5
+              ? _expandHistoryToggleButton()
+              : Container()),
+          SizedBox(height: 5)
+        ],
+      ),
+    );
+  }
+
+  TextButton _expandHistoryToggleButton() {
+    return TextButton.icon(
+      onPressed: () {
+        waterC.isWaterHistoryTodayExpanded.value =
+            !waterC.isWaterHistoryTodayExpanded.value;
+      },
+      style: TextButton.styleFrom(minimumSize: Size(0, 0)),
+      icon: Icon(
+        waterC.isWaterHistoryTodayExpanded.value
+            ? Icons.keyboard_arrow_up
+            : Icons.keyboard_arrow_down,
+        color: Colors.blue,
+      ),
+      label: Text(
+        waterC.isWaterHistoryTodayExpanded.value ? "Show Less" : "Show More",
+        style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Column _todayHistoryList() {
+    return Column(
+      children: [
+        waterC.waterTodayHistory.value!.isNotEmpty
+            ? ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: waterC.isWaterHistoryTodayExpanded.value
+                    ? waterC.waterTodayHistory.value!.length
+                    : waterC.waterTodayHistory.value!.length > 5
+                        ? 5
+                        : waterC.waterTodayHistory.value!.length,
+                itemBuilder: (context, index) {
+                  return _todayHistoryItem(
+                      waterC.waterTodayHistory.value![index], index);
+                },
+              )
+            : _todayHistoryEmpty(),
+      ],
+    );
+  }
+
+  Column _todayHistoryItem(item, index) {
+    return Column(
       children: [
         ListTile(
           contentPadding: EdgeInsets.only(left: 8),
@@ -138,12 +188,13 @@ class _HomeState extends State<Home> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Water",
+                      item["type"],
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "15.00 PM",
+                      HelplessUtil.getHourMinuteFromIso8601String(
+                          item["datetime"]),
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey,
@@ -156,7 +207,7 @@ class _HomeState extends State<Home> {
               Row(
                 children: [
                   Text(
-                    "200mL",
+                    "${item["amount"].toInt()}mL",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
@@ -177,15 +228,17 @@ class _HomeState extends State<Home> {
             ],
           ),
         ),
-        // Divider(),
+        index < waterC.waterTodayHistory.value!.length - 1
+            ? Divider(color: Colors.grey.shade300)
+            : SizedBox(height: 0),
       ],
     );
   }
 
-  Column _TodayHistoryEmpty() {
+  Column _todayHistoryEmpty() {
     return Column(
       children: [
-        SizedBox(height: 10),
+        SizedBox(height: 20),
         Image.asset("assets/logo_blue.png"),
         SizedBox(height: 20),
         Text("You have no history on water intake today."),
@@ -194,7 +247,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Row _TodayHistoryHeader() {
+  Row _todayHistoryHeader() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -228,7 +281,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Container _WaterCounter() {
+  Container _waterCounter() {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -239,26 +292,26 @@ class _HomeState extends State<Home> {
             const EdgeInsets.only(left: 25, right: 25, top: 30, bottom: 25),
         child: Column(
           children: [
-            // Container(
-            //   padding: EdgeInsets.all(0),
-            //   child: Padding(
-            //     padding: EdgeInsets.symmetric(
-            //       horizontal: MediaQuery.of(context).size.width * 0.2,
-            //     ),
-            //     child: AspectRatio(
-            //       aspectRatio: 0.99,
-            //       child: SizedBox(
-            //         width: 100,
-            //         child: SphericalBottle(
-            //           key: waterC.sphereBottleRef,
-            //           waterColor: Colors.blue,
-            //           bottleColor: Colors.blue,
-            //           capColor: Colors.grey.shade700,
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
+            Container(
+              padding: EdgeInsets.all(0),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.2,
+                ),
+                // child: AspectRatio(
+                //   aspectRatio: 0.99,
+                //   child: SizedBox(
+                //     width: 100,
+                //     child: SphericalBottle(
+                //       key: waterC.sphereBottleRef,
+                //       waterColor: Colors.blue,
+                //       bottleColor: Colors.blue,
+                //       capColor: Colors.grey.shade700,
+                //     ),
+                //   ),
+                // ),
+              ),
+            ),
             SizedBox(height: 20),
             Obx(
               () => AnimatedDigitWidget(
@@ -271,31 +324,44 @@ class _HomeState extends State<Home> {
                 duration: Duration(milliseconds: 500),
               ),
             ),
-            Text("/${waterC.dailyGoal.value.toInt()}mL",
-                style: TextStyle(fontSize: 17)),
+            Obx(() => Text("/${waterC.dailyGoal.value.toInt()}mL",
+                style: TextStyle(fontSize: 17))),
             SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  onPressed: () => waterC.drinkWater(200),
-                  child: Text(
-                    "Drink (200mL)",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                Obx(
+                  () => ElevatedButton(
+                    onPressed: () =>
+                        waterC.isDrinking.value ? null : waterC.drinkWater(200),
+                    child: Text(
+                      waterC.isDrinking.value ? "Drinking..." : "Drink (200mL)",
+                      style: TextStyle(
+                        color: waterC.isDrinking.value
+                            ? Colors.blue
+                            : Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF369FFF),
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: waterC.isDrinking.value
+                          ? Colors.white
+                          : Color(0xFF369FFF),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      minimumSize: Size(120, 0),
+                      side: waterC.isDrinking.value
+                          ? BorderSide(color: Colors.blue)
+                          : BorderSide.none,
+                      splashFactory: NoSplash.splashFactory,
+                    ),
                   ),
                 ),
                 SizedBox(width: 20),
                 Stack(
                   children: [
                     IconButton.outlined(
-                      onPressed: () {},
+                      onPressed: () => Get.to(() => SwitchCupSize()),
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(color: Colors.grey.shade300),
                         padding: EdgeInsets.all(12),

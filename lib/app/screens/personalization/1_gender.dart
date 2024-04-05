@@ -48,7 +48,7 @@ class GenderPersonalization extends StatelessWidget {
                   children: [
                     GenderButton(
                       onPressed: () {
-                        personalizationC.setGender(Gender.MALE);
+                        personalizationC.gender.value = Gender.MALE;
                       },
                       icon: Icons.male,
                       text: "Male",
@@ -58,7 +58,7 @@ class GenderPersonalization extends StatelessWidget {
                     ),
                     GenderButton(
                       onPressed: () {
-                        personalizationC.setGender(Gender.FEMALE);
+                        personalizationC.gender.value = Gender.FEMALE;
                       },
                       icon: Icons.female,
                       text: "Female",
@@ -74,7 +74,7 @@ class GenderPersonalization extends StatelessWidget {
                 child: Obx(
                   () => ElevatedButton(
                     onPressed: () {
-                      personalizationC.setGender(Gender.SECRET);
+                      personalizationC.gender.value = Gender.SECRET;
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: personalizationC.gender == Gender.SECRET

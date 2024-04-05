@@ -18,8 +18,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   ).then((FirebaseApp value) => Get.put(AuthController()));
-  Get.put(WaterController());
-  Get.put(NavController());
   FirebaseFirestore.instance;
   runApp(MyApp());
 }
@@ -32,6 +30,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme()),
+      title: 'Waterloo',
       home: GetStarted(),
     );
   }
