@@ -1,3 +1,4 @@
+import 'package:color_log/color_log.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +9,7 @@ import 'package:waterloo/app/constants/beverage_list.dart';
 import 'package:waterloo/app/constants/cup_size_list.dart';
 import 'package:waterloo/app/controllers/base/water_controller.dart';
 import 'package:waterloo/app/widgets/full_width_button.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 class SwitchCupSize extends StatefulWidget {
   SwitchCupSize({super.key});
@@ -19,6 +21,7 @@ class SwitchCupSize extends StatefulWidget {
 class _SwitchCupSizeState extends State<SwitchCupSize> {
   final waterC = Get.find<WaterController>();
   TextEditingController amountController = TextEditingController(text: "200");
+  final _keyboardVisibilityController = KeyboardVisibilityController();
 
   @override
   void dispose() {
@@ -29,6 +32,7 @@ class _SwitchCupSizeState extends State<SwitchCupSize> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -47,18 +51,24 @@ class _SwitchCupSizeState extends State<SwitchCupSize> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _waterCupSizeList(context),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Text("Or Drink"),
+      body: KeyboardVisibilityBuilder(
+        controller: _keyboardVisibilityController,
+        builder: (context, isKeyboardVisible) {
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _waterCupSizeList(context),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Text("Or Drink"),
+                ),
+                _beverageList(context),
+              ],
             ),
-            _beverageList(context),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -156,7 +166,10 @@ class _SwitchCupSizeState extends State<SwitchCupSize> {
                 Divider(thickness: 0.5),
                 SizedBox(height: 20),
                 _buttons(),
-                SizedBox(height: 20)
+                SizedBox(height: 20),
+                _keyboardVisibilityController.isVisible
+                    ? SizedBox(height: MediaQuery.of(context).viewInsets.bottom)
+                    : SizedBox(),
               ],
             ),
           ),

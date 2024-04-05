@@ -60,6 +60,7 @@ dependencies:
   dropdown_button2: ^2.3.9
   animated_digit: ^3.2.3
   flutter_native_splash: ^2.4.0
+  flutter_keyboard_visibility: ^6.0.0
 
 dev_dependencies:
   flutter_test:
