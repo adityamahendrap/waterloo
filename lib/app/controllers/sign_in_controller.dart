@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:waterloo/app/controllers/base/auth_controller.dart';
 import 'package:waterloo/app/screens/home.dart';
@@ -33,6 +34,7 @@ class SignInController extends GetxController {
       return;
     }
 
+    EasyLoading.show();
     try {
       final UserCredential credential = await AuthService.signInWithEmail(
           emailController.text, passwordController.text);
@@ -46,6 +48,8 @@ class SignInController extends GetxController {
     } catch (e) {
       AppSnackBar.error("Failed", "Unknown Error");
       print(e);
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 }

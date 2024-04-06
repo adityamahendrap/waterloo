@@ -55,6 +55,7 @@ class AuthController extends GetxController {
   }
 
   void google() async {
+    EasyLoading.show();
     try {
       final UserCredential credential = await AuthService.signInWithGoogle();
       final user = await AuthService.checkOrCreateUser(credential);
@@ -62,10 +63,13 @@ class AuthController extends GetxController {
       afterSignRedirect(user);
     } catch (e) {
       _handleErr(e);
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 
   void facebook() async {
+    EasyLoading.show();
     try {
       final UserCredential credential = await AuthService.signInWithFacebook();
       final user = await AuthService.checkOrCreateUser(credential);
@@ -73,6 +77,8 @@ class AuthController extends GetxController {
       afterSignRedirect(user);
     } catch (e) {
       _handleErr(e);
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 
@@ -80,11 +86,14 @@ class AuthController extends GetxController {
     try {
       final UserCredential credential =
           await AuthService.signInWithGitHub(context);
+      EasyLoading.show();
       final user = await AuthService.checkOrCreateUser(credential);
       cacheUser(user);
       afterSignRedirect(user);
     } catch (e) {
       _handleErr(e);
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 
