@@ -11,9 +11,12 @@ import 'package:waterloo/app/controllers/nav_controller.dart';
 import 'package:waterloo/app/controllers/base/water_controller.dart';
 import 'package:waterloo/app/screens/cup_size/switch_cup_size.dart';
 import 'package:waterloo/app/utils/helpless.dart';
+import 'package:waterloo/app/widgets/drink/edit_drink_main.dart';
 import 'package:waterloo/app/widgets/full_width_button.dart';
+import 'package:waterloo/app/widgets/loading.dart';
 import 'package:waterloo/app/widgets/main_appbar.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:waterloo/app/widgets/wrapper/bottom_sheet_fit_content_wrapper.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -25,10 +28,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final navC = Get.put(NavController());
   final waterC = Get.put(WaterController());
-
-  TextEditingController _amountEditController =
-      TextEditingController(text: "200");
-  final _keyboardVisibilityController = KeyboardVisibilityController();
 
   @override
   void initState() {
@@ -268,13 +267,10 @@ class _HomeState extends State<Home> {
                       onSelected: (String value) {
                         print('You Click on po up menu item');
                         if (value == 'edit') {
-                          print('You Click on edit');
-                          clog.info(item.toString());
-                          _amountEditController.text =
-                              item['amount'].toInt().toString();
-                          _bottomSheet(context, item);
+                          bottomSheetFitContentWrapper(
+                              context, EditDrinkMain(item: item));
                         } else {
-                          print('You Click on delete');
+                          clog.error('Unimplemented delete function');
                         }
                       },
                     ),
@@ -464,195 +460,6 @@ class _HomeState extends State<Home> {
               ],
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  TextField _amountInput() {
-    return TextField(
-      controller: _amountEditController,
-      keyboardType: TextInputType.number,
-      style: TextStyle(
-        fontSize: 64,
-        fontWeight: FontWeight.bold,
-        color: Colors.blue,
-        height: 1,
-      ),
-      textAlign: TextAlign.center,
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
-      ],
-      cursorColor: Colors.blue,
-      cursorWidth: 7,
-      cursorRadius: Radius.circular(20),
-      decoration: InputDecoration(
-        fillColor: Colors.grey.shade100,
-        filled: true,
-        contentPadding:
-            EdgeInsets.only(right: 20, top: 30, bottom: 30, left: 60),
-        suffix: Padding(
-          padding: EdgeInsets.only(left: 10),
-          child: Text("mL",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
-        ),
-        hintText: "100",
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey.shade400, width: 1.0),
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey.shade400, width: 1.0),
-        ),
-      ),
-    );
-  }
-
-  Future<dynamic> _bottomSheet(BuildContext context, Map item) {
-    return showMaterialModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-      ),
-      builder: (context) => SingleChildScrollView(
-        child: Container(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: [
-                SizedBox(height: 10),
-                Container(height: 4, width: 50, color: Colors.grey.shade300),
-                SizedBox(height: 20),
-                Text(
-                  "Edit Drinked ${item['type']}",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                ),
-                SizedBox(height: 20),
-                Divider(thickness: 0.8),
-                SizedBox(height: 20),
-                SizedBox(
-                  height: 64,
-                  width: 64,
-                  child: Image.asset(item['type'] == 'Water'
-                      ? "assets/glass-of-water.png"
-                      : beverages.firstWhere(
-                          (e) => e["name"] == item["type"])["image"]!),
-                ),
-                SizedBox(height: 30),
-                _amountInput(),
-                SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.grey.shade100),
-                          elevation: MaterialStateProperty.all(0),
-                          padding: MaterialStateProperty.all(
-                              EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 12)),
-                          side: MaterialStateProperty.all(BorderSide(
-                              color: Colors.grey.shade400, width: 1.0)),
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5))),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              HelplessUtil.getDateFromIso8601String(
-                                  item["datetime"]),
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Icon(Icons.edit_outlined, color: Colors.black),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.grey.shade100),
-                          elevation: MaterialStateProperty.all(0),
-                          padding: MaterialStateProperty.all(
-                              EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 12)),
-                          side: MaterialStateProperty.all(BorderSide(
-                              color: Colors.grey.shade400, width: 1.0)),
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5))),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              HelplessUtil.getHourMinuteFromIso8601String(
-                                  item["datetime"]),
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Icon(Icons.edit_outlined, color: Colors.black),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Divider(thickness: 0.5),
-                SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: FullWidthButton(
-                        type: FullWidthButtonType.secondary,
-                        text: "Cancel",
-                        onPressed: () => Get.back(),
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                    Expanded(
-                      child: FullWidthButton(
-                        type: FullWidthButtonType.primary,
-                        text: "OK",
-                        onPressed: () {
-                          waterC.switchCupSize(
-                              double.parse(_amountEditController.text),
-                              item['type']);
-                          Get.back();
-                        },
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(height: 20),
-                _keyboardVisibilityController.isVisible
-                    ? SizedBox(height: MediaQuery.of(context).viewInsets.bottom)
-                    : SizedBox(),
-              ],
-            ),
-          ),
         ),
       ),
     );
