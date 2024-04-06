@@ -23,14 +23,18 @@ class HelplessUtil {
     return timestamp.toDate().toIso8601String();
   }
 
-  static getHourMinuteFromIso8601String(String iso8601String) {
+  static String getHourMinuteFromIso8601String(String iso8601String) {
     final DateTime dateTime = DateTime.parse(iso8601String);
     return DateFormat.Hm().format(dateTime);
   }
 
-  static getDateFromIso8601String(String iso8601String) {
+  static String getDateFromIso8601String(String iso8601String) {
     final DateTime dateTime = DateTime.parse(iso8601String);
     // Dec 20, 2021
     return DateFormat.yMMMd().format(dateTime);
+  }
+
+  static DateTime iso8601StringToTimestamp(String iso8601String) {
+    return DateTime.parse(iso8601String);
   }
 }

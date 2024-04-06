@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 Future<dynamic> bottomSheetFitContentWrapper(
-    BuildContext context, Widget content) {
+    BuildContext context, Widget content,
+    {bool enableDrag = true}) {
   return showMaterialModalBottomSheet(
     context: context,
+    enableDrag: enableDrag,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(20),

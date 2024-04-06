@@ -7,7 +7,10 @@ import 'package:get/get.dart';
 import 'package:waterloo/app/constants/beverage_list.dart';
 import 'package:waterloo/app/controllers/base/water_controller.dart';
 import 'package:waterloo/app/utils/helpless.dart';
+import 'package:waterloo/app/widgets/drink/edit_drink_date.dart';
+import 'package:waterloo/app/widgets/drink/edit_drink_time.dart';
 import 'package:waterloo/app/widgets/full_width_button.dart';
+import 'package:waterloo/app/widgets/wrapper/bottom_sheet_fit_content_wrapper.dart';
 
 class EditDrinkMain extends StatefulWidget {
   late Map<String, dynamic> item;
@@ -67,7 +70,11 @@ class _EditDrinkMainState extends State<EditDrinkMain> {
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.back();
+                  bottomSheetFitContentWrapper(
+                      context, EditDrinkDate(item: widget.item));
+                },
                 style: ButtonStyle(
                   backgroundColor:
                       MaterialStateProperty.all(Colors.grey.shade100),
@@ -100,7 +107,14 @@ class _EditDrinkMainState extends State<EditDrinkMain> {
             SizedBox(width: 20),
             Expanded(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.back();
+                  bottomSheetFitContentWrapper(
+                    context,
+                    EditDrinkTime(item: widget.item),
+                    enableDrag: false,
+                  );
+                },
                 style: ButtonStyle(
                   backgroundColor:
                       MaterialStateProperty.all(Colors.grey.shade100),

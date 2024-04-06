@@ -21,6 +21,9 @@ class WaterController extends GetxController {
   final waterTodayHistory = Rxn<List<Map<String, dynamic>>>();
   final isWaterHistoryTodayExpanded = false.obs;
 
+  final editDrinkHour = 0.obs;
+  final editDrinkMinute = 0.obs;
+
   final sphereBottleRef = GlobalKey<SphericalBottleState>();
   final box = GetStorage();
   CollectionReference waters = FirebaseFirestore.instance.collection('waters');
