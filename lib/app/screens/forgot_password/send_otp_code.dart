@@ -5,6 +5,7 @@ import 'package:waterloo/app/controllers/base/auth_controller.dart';
 import 'package:waterloo/app/screens/forgot_password/enter_otp_code.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class SendOtpCode extends StatelessWidget {
   SendOtpCode({Key? key}) : super(key: key);
@@ -69,7 +70,9 @@ class SendOtpCode extends StatelessWidget {
           FullWidthButtonBottomBar(
             context: context,
             text: "Send OTP Code",
-            onPressed: () => authC.sendOTPCode(emailController.text),
+            onPressed: () {
+              authC.sendOTPCode(emailController.text);
+            },
           ),
         ],
       ),

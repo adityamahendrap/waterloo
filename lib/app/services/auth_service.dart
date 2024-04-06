@@ -15,14 +15,15 @@ import 'package:mailer/smtp_server.dart';
 class AuthService {
   static Future<Map<String, dynamic>> checkOrCreateUser(
       UserCredential credential) async {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    CollectionReference usersRef =
+        FirebaseFirestore.instance.collection('users');
 
     clog.debug('checkOrCreateUser');
     DocumentSnapshot<Object?> userSnapshot =
-        await users.doc(credential.user!.uid).get();
+        await usersRef.doc(credential.user!.uid).get();
 
     if (!userSnapshot.exists) {
-      await users
+      await usersRef
           .doc(credential.user!.uid)
           .set({
             'uid': credential.user?.uid,
@@ -40,7 +41,7 @@ class AuthService {
             throw error;
           });
 
-      userSnapshot = await users.doc(credential.user!.uid).get();
+      userSnapshot = await usersRef.doc(credential.user!.uid).get();
     } else
       clog.info('user exists');
 
@@ -133,15 +134,15 @@ class AuthService {
     String otpCode = (Random().nextInt(9000) + 1000).toString();
     DateTime otpCodeExpiry = DateTime.now().add(Duration(minutes: 5));
 
-    final otpCodeData = {
+    // Save OTP code to Firestore
+    final forgotPasswordRef =
+        FirebaseFirestore.instance.collection('forgot_password');
+    await forgotPasswordRef.add({
+      'email': email,
       'otp_code': otpCode,
       'otp_code_expiry': otpCodeExpiry,
-    };
-
-    // Save OTP code to Firestore
-    final otpCodeRef =
-        FirebaseFirestore.instance.collection('otp_codes').doc(email);
-    await otpCodeRef.set(otpCodeData);
+    });
+    clog.info('OTP code generated and saved: $otpCode');
 
     return otpCode;
   }
@@ -168,5 +169,45 @@ class AuthService {
       }
       throw GoGoException('Failed to send OTP code, please try again later');
     }
+  }
+
+  static Future<void> deletePreviousOTPCode(String email) async {
+    final forgotPasswordRef =
+        FirebaseFirestore.instance.collection('forgot_password');
+    final snapshot =
+        await forgotPasswordRef.where('email', isEqualTo: email).get();
+
+    if (snapshot.docs.isNotEmpty) {
+      snapshot.docs.forEach((doc) {
+        forgotPasswordRef.doc(doc.id).delete();
+      });
+      clog.info('previous $email OTP code deleted');
+    } else {
+      clog.info('no previous $email OTP code found');
+    }
+  }
+
+  static Future<void> verifyOTPCode(String email, String otpCode) async {
+    final forgotPasswordRef =
+        FirebaseFirestore.instance.collection('forgot_password');
+    final snapshot = await forgotPasswordRef
+        .where('email', isEqualTo: email)
+        .where('otp_code', isEqualTo: otpCode)
+        .get();
+
+    if (snapshot.docs.isEmpty) {
+      throw GoGoException('Invalid OTP code');
+    }
+
+    // check if OTP code is expired (5 minutes)
+    final otpCodeData = snapshot.docs.first.data();
+    final idOtpCodeExpired =
+        (otpCodeData['otp_code_expiry'] as Timestamp).toDate();
+    if (DateTime.now().isAfter(idOtpCodeExpired)) {
+      throw GoGoException(
+          'OTP code has been expired, please request a new one');
+    }
+
+    clog.info('OTP code verified');
   }
 }

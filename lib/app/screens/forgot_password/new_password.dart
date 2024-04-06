@@ -1,12 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:waterloo/app/controllers/base/auth_controller.dart';
 import 'package:waterloo/app/screens/forgot_password/success.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
 
-class NewPassword extends StatelessWidget {
-  const NewPassword({Key? key}) : super(key: key);
+class NewPassword extends StatefulWidget {
+  NewPassword({Key? key}) : super(key: key);
+
+  @override
+  State<NewPassword> createState() => _NewPasswordState();
+}
+
+class _NewPasswordState extends State<NewPassword> {
+  final _authC = Get.find<AuthController>();
+
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +52,9 @@ class NewPassword extends StatelessWidget {
               ),
               SizedBox(height: 10),
               TextField(
+                controller: _passwordController,
                 textAlignVertical: TextAlignVertical.center,
-                obscureText: true,
+                obscureText: !_isPasswordVisible,
                 decoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.lock_outline,
@@ -54,10 +69,14 @@ class NewPassword extends StatelessWidget {
                   fillColor: Color.fromARGB(101, 241, 241, 241),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      Icons.visibility_off_outlined,
+                      _isPasswordVisible
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
                       color: Colors.black,
                     ),
-                    onPressed: () {},
+                    onPressed: () => setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    }),
                   ),
                   focusedBorder: InputBorder.none,
                   enabledBorder: InputBorder.none,
@@ -72,8 +91,9 @@ class NewPassword extends StatelessWidget {
               ),
               SizedBox(height: 10),
               TextField(
+                controller: _confirmPasswordController,
                 textAlignVertical: TextAlignVertical.center,
-                obscureText: true,
+                obscureText: !_isConfirmPasswordVisible,
                 decoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.lock_outline,
@@ -88,10 +108,14 @@ class NewPassword extends StatelessWidget {
                   fillColor: Color.fromARGB(101, 241, 241, 241),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      Icons.visibility_off_outlined,
+                      _isConfirmPasswordVisible
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
                       color: Colors.black,
                     ),
-                    onPressed: () {},
+                    onPressed: () => setState(() {
+                      _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                    }),
                   ),
                   focusedBorder: InputBorder.none,
                   enabledBorder: InputBorder.none,
@@ -106,7 +130,11 @@ class NewPassword extends StatelessWidget {
             context: context,
             text: "Save New Password",
             onPressed: () {
-              Get.offAll(Success());
+              _authC.updatePassword(
+                Get.arguments['email'],
+                _passwordController.text,
+                _confirmPasswordController.text,
+              );
             },
           ),
         ],

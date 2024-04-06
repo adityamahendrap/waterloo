@@ -1,13 +1,24 @@
+import 'package:color_log/color_log.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:waterloo/app/controllers/base/auth_controller.dart';
 import 'package:waterloo/app/screens/forgot_password/new_password.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:timer_count_down/timer_count_down.dart';
 
-class EnterOtpCode extends StatelessWidget {
-  const EnterOtpCode({Key? key}) : super(key: key);
+class EnterOtpCode extends StatefulWidget {
+  EnterOtpCode({Key? key}) : super(key: key);
+
+  @override
+  State<EnterOtpCode> createState() => _EnterOtpCodeState();
+}
+
+class _EnterOtpCodeState extends State<EnterOtpCode> {
+  final authC = Get.find<AuthController>();
+  bool _isResendCodeButtonActive = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +43,6 @@ class EnterOtpCode extends StatelessWidget {
               SizedBox(height: 10),
               Text(
                   "We've sent an OTP code to your email. Please check your inbox and enter the code below."),
-              Text(
-                  "We've sent an OTP code to your email. Please check your inbox and enter the code below."),
               SizedBox(height: 25),
               OtpTextField(
                 numberOfFields: 4,
@@ -46,58 +55,75 @@ class EnterOtpCode extends StatelessWidget {
                 borderColor: Colors.white,
                 enabledBorderColor: Colors.white,
                 focusedBorderColor: Colors.blue,
+                cursorColor: Colors.blue,
                 autoFocus: true,
                 textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 onSubmit: (String verificationCode) {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text("Verification Code"),
-                        content: Text('Code entered is $verificationCode'),
-                      );
-                    },
-                  );
+                  clog.debug('verificationCode: $verificationCode');
+                  clog.debug('email: ${Get.arguments['email']}');
+                  authC.verifyOTPCode(Get.arguments['email'], verificationCode);
                 },
               ),
               SizedBox(height: 25),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("You can reset the code in "),
-                  Text(
-                    "56",
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(" seconds")
-                ],
-              ),
-              Center(
-                child: TextButton(
-                  child: Text(
-                    "Resend Code",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onPressed: () {},
-                ),
-              ),
-              SizedBox(height: 100)
+              _isResendCodeButtonActive ? _resendButton() : _countdownResend(),
+              SizedBox(height: 100),
             ],
           ),
-          FullWidthButtonBottomBar(
-            context: context,
-            text: "Submit",
-            onPressed: () {
-              Get.off(NewPassword());
-            },
-          ),
+          // FullWidthButtonBottomBar(
+          //   context: context,
+          //   text: "Submit",
+          //   onPressed: () {
+          //     Get.off(NewPassword());
+          //   },
+          // ),
         ],
       ),
+    );
+  }
+
+  Center _resendButton() {
+    return Center(
+      child: TextButton(
+        child: Text(
+          "Resend Code",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.blue,
+          ),
+        ),
+        onPressed: () async {
+          FocusManager.instance.primaryFocus!.unfocus();
+          await authC.resendOTPCode(Get.arguments['email']);
+          setState(() {
+            _isResendCodeButtonActive = false;
+          });
+        },
+      ),
+    );
+  }
+
+  Row _countdownResend() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("You can resent the code in "),
+        Countdown(
+          seconds: 60,
+          build: (BuildContext context, double time) => Text(
+            time.toInt().toString(),
+            style: TextStyle(
+              color: Colors.blue,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          onFinished: () {
+            setState(() {
+              _isResendCodeButtonActive = true;
+            });
+          },
+        ),
+        Text(" seconds")
+      ],
     );
   }
 }
