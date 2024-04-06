@@ -38,93 +38,96 @@ class _NewPasswordState extends State<NewPassword> {
       ),
       body: Stack(
         children: [
-          ListView(
+          Padding(
             padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
-            children: [
-              TextTitle(title: "Secure your account 🔒"),
-              SizedBox(height: 10),
-              Text(
-                  "Choose a new password for your Waterloo account. Make sure it's strong and memorable."),
-              SizedBox(height: 25),
-              Text(
-                "New Password",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: _passwordController,
-                textAlignVertical: TextAlignVertical.center,
-                obscureText: !_isPasswordVisible,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.lock_outline,
-                    color: Colors.black,
-                  ),
-                  hintText: 'New Password',
-                  hintStyle: TextStyle(color: Color(0xff9E9E9E)),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  filled: true,
-                  fillColor: Color.fromARGB(101, 241, 241, 241),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextTitle(title: "Secure your account 🔒"),
+                SizedBox(height: 10),
+                Text(
+                    "Choose a new password for your Waterloo account. Make sure it's strong and memorable."),
+                SizedBox(height: 25),
+                Text(
+                  "New Password",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  controller: _passwordController,
+                  textAlignVertical: TextAlignVertical.center,
+                  obscureText: !_isPasswordVisible,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(
+                      Icons.lock_outline,
                       color: Colors.black,
                     ),
-                    onPressed: () => setState(() {
-                      _isPasswordVisible = !_isPasswordVisible;
-                    }),
+                    hintText: 'New Password',
+                    hintStyle: TextStyle(color: Color(0xff9E9E9E)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    filled: true,
+                    fillColor: Color.fromARGB(101, 241, 241, 241),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                        color: Colors.black,
+                      ),
+                      onPressed: () => setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      }),
+                    ),
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
                   ),
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  errorBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
                 ),
-              ),
-              SizedBox(height: 20),
-              Text(
-                "Confirm New Password",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: _confirmPasswordController,
-                textAlignVertical: TextAlignVertical.center,
-                obscureText: !_isConfirmPasswordVisible,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.lock_outline,
-                    color: Colors.black,
-                  ),
-                  hintText: "Confirm New Password",
-                  hintStyle: TextStyle(color: Color(0xff9E9E9E)),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  filled: true,
-                  fillColor: Color.fromARGB(101, 241, 241, 241),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isConfirmPasswordVisible
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
+                SizedBox(height: 20),
+                Text(
+                  "Confirm New Password",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  controller: _confirmPasswordController,
+                  textAlignVertical: TextAlignVertical.center,
+                  obscureText: !_isConfirmPasswordVisible,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(
+                      Icons.lock_outline,
                       color: Colors.black,
                     ),
-                    onPressed: () => setState(() {
-                      _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
-                    }),
+                    hintText: "Confirm New Password",
+                    hintStyle: TextStyle(color: Color(0xff9E9E9E)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    filled: true,
+                    fillColor: Color.fromARGB(101, 241, 241, 241),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isConfirmPasswordVisible
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                        color: Colors.black,
+                      ),
+                      onPressed: () => setState(() {
+                        _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                      }),
+                    ),
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
                   ),
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  errorBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
                 ),
-              ),
-              SizedBox(height: 100),
-            ],
+                SizedBox(height: 100),
+              ],
+            ),
           ),
           FullWidthButtonBottomBar(
             context: context,

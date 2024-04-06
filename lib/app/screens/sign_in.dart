@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:waterloo/app/controllers/base/auth_controller.dart';
@@ -36,110 +37,114 @@ class SignIn extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          ListView(
+          SingleChildScrollView(
             padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
-            children: [
-              TextTitle(title: "Welcome Back 👋"),
-              SizedBox(height: 10),
-              Text(
-                  "Sign in to your account to continue your journey towards a healthier you."),
-              SizedBox(height: 25),
-              Form(
-                key: signInC.signInFormKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Email",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 10),
-                    _emailInput(),
-                    SizedBox(height: 20),
-                    Text(
-                      "Password",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 10),
-                    Obx(() => _passwordInput()),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextTitle(title: "Welcome Back 👋"),
+                SizedBox(height: 10),
+                Text(
+                    "Sign in to your account to continue your journey towards a healthier you."),
+                SizedBox(height: 25),
+                Form(
+                  key: signInC.signInFormKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        height: 24,
-                        width: 24,
-                        child: Obx(
-                          () => Checkbox(
-                            value: signInC.isRememberMe.value,
-                            onChanged: (value) => signInC.isRememberMe.toggle(),
-                            activeColor: Colors.blue,
-                          ),
-                        ),
+                      Text(
+                        "Email",
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(width: 10),
-                      Text("Remember me"),
+                      SizedBox(height: 10),
+                      _emailInput(),
+                      SizedBox(height: 20),
+                      Text(
+                        "Password",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 10),
+                      Obx(() => _passwordInput()),
                     ],
                   ),
-                  TextButton(
-                    onPressed: () {
-                      Get.to(() => SendOtpCode());
-                    },
-                    child: Text(
-                      "Forgot Password?",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: Obx(
+                            () => Checkbox(
+                              value: signInC.isRememberMe.value,
+                              onChanged: (value) =>
+                                  signInC.isRememberMe.toggle(),
+                              activeColor: Colors.blue,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Text("Remember me"),
+                      ],
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Get.to(() => SendOtpCode());
+                      },
+                      child: Text(
+                        "Forgot Password?",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Doesn't have an account? "),
-                  TextButton(
-                    onPressed: () {
-                      Get.off(() => SignUp());
-                    },
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.all(EdgeInsets.zero),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Doesn't have an account? "),
+                    TextButton(
+                      onPressed: () {
+                        Get.off(() => SignUp());
+                      },
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all(EdgeInsets.zero),
+                      ),
+                      child: Text(
+                        "Sign Up",
+                        style: TextStyle(
+                            color: Colors.blue, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                    child: Text(
-                      "Sign Up",
-                      style: TextStyle(
-                          color: Colors.blue, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              HorizontalDivider(text: "or"),
-              SizedBox(height: 25),
-              OauthButton(
-                  iconPath: "assets/google_icon.png",
-                  text: "Continue with Google",
-                  onPressed: () => authC.google()),
-              SizedBox(height: 15),
-              OauthButton(
-                  iconPath: "assets/facebook_icon.png",
-                  text: "Continue with Facebook",
-                  onPressed: () => authC.facebook()),
-              SizedBox(height: 15),
-              OauthButton(
-                  iconPath: "assets/github_icon.png",
-                  text: "Continue with GitHub",
-                  onPressed: () => authC.github(context)),
-              SizedBox(height: 100),
-            ],
+                  ],
+                ),
+                SizedBox(height: 10),
+                HorizontalDivider(text: "or"),
+                SizedBox(height: 25),
+                OauthButton(
+                    iconPath: "assets/google_icon.png",
+                    text: "Continue with Google",
+                    onPressed: () => authC.google()),
+                SizedBox(height: 15),
+                OauthButton(
+                    iconPath: "assets/facebook_icon.png",
+                    text: "Continue with Facebook",
+                    onPressed: () => authC.facebook()),
+                SizedBox(height: 15),
+                OauthButton(
+                    iconPath: "assets/github_icon.png",
+                    text: "Continue with GitHub",
+                    onPressed: () => authC.github(context)),
+                SizedBox(height: 100),
+              ],
+            ),
           ),
           FullWidthButtonBottomBar(
             context: context,

@@ -21,7 +21,6 @@ class TallPersonalization extends StatelessWidget {
       appBar: AppBarPersonalization(step: 2),
       body: Stack(
         children: [
-          // Obx(() => Text("talls: ${personalizationC.tall}")),
           SingleChildScrollView(
             padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
             child: Column(

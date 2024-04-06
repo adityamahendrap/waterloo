@@ -188,12 +188,15 @@ class AuthController extends GetxController {
       return;
     }
 
+    EasyLoading.show();
     try {
       // TODO
       // await AuthService.updatePassword(email, password);
       Get.offAll(() => Success());
     } catch (e) {
       _handleErr(e);
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 }

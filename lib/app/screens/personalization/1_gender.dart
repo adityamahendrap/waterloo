@@ -32,74 +32,77 @@ class GenderPersonalization extends StatelessWidget {
       appBar: AppBarPersonalization(step: 1),
       body: Stack(
         children: [
-          ListView(
+          Padding(
             padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
-            children: [
-              Center(child: TextTitle(title: "What's your gender?")),
-              SizedBox(height: 10),
-              Text(
-                "Waterloo is here to taylor a hidration plan just for you! Let's kick thing off by getting to know you better",
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 100),
-              Obx(
-                () => Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    GenderButton(
-                      onPressed: () {
-                        personalizationC.gender.value = Gender.MALE;
-                      },
-                      icon: Icons.male,
-                      text: "Male",
-                      style: personalizationC.gender == Gender.MALE
-                          ? genderButtonActiveStyle
-                          : genderButtonInactiveStyle,
-                    ),
-                    GenderButton(
-                      onPressed: () {
-                        personalizationC.gender.value = Gender.FEMALE;
-                      },
-                      icon: Icons.female,
-                      text: "Female",
-                      style: personalizationC.gender == Gender.FEMALE
-                          ? genderButtonActiveStyle
-                          : genderButtonInactiveStyle,
-                    ),
-                  ],
+            child: Column(
+              children: [
+                Center(child: TextTitle(title: "What's your gender?")),
+                SizedBox(height: 10),
+                Text(
+                  "Waterloo is here to taylor a hidration plan just for you! Let's kick thing off by getting to know you better",
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              SizedBox(height: 50),
-              Align(
-                child: Obx(
-                  () => ElevatedButton(
-                    onPressed: () {
-                      personalizationC.gender.value = Gender.SECRET;
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: personalizationC.gender == Gender.SECRET
-                          ? genderButtonActiveStyle["bgColor"]
-                          : genderButtonInactiveStyle["bgColor"],
-                      shape: StadiumBorder(),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 25,
-                        vertical: 12,
+                SizedBox(height: 100),
+                Obx(
+                  () => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      GenderButton(
+                        onPressed: () {
+                          personalizationC.gender.value = Gender.MALE;
+                        },
+                        icon: Icons.male,
+                        text: "Male",
+                        style: personalizationC.gender == Gender.MALE
+                            ? genderButtonActiveStyle
+                            : genderButtonInactiveStyle,
                       ),
-                    ),
-                    child: Text(
-                      "Prefer not to say",
-                      style: TextStyle(
-                        color: personalizationC.gender == Gender.SECRET
-                            ? Colors.white
-                            : genderButtonInactiveStyle["textColor"],
-                        fontWeight: FontWeight.bold,
+                      GenderButton(
+                        onPressed: () {
+                          personalizationC.gender.value = Gender.FEMALE;
+                        },
+                        icon: Icons.female,
+                        text: "Female",
+                        style: personalizationC.gender == Gender.FEMALE
+                            ? genderButtonActiveStyle
+                            : genderButtonInactiveStyle,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 50),
+                Align(
+                  child: Obx(
+                    () => ElevatedButton(
+                      onPressed: () {
+                        personalizationC.gender.value = Gender.SECRET;
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            personalizationC.gender == Gender.SECRET
+                                ? genderButtonActiveStyle["bgColor"]
+                                : genderButtonInactiveStyle["bgColor"],
+                        shape: StadiumBorder(),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 25,
+                          vertical: 12,
+                        ),
+                      ),
+                      child: Text(
+                        "Prefer not to say",
+                        style: TextStyle(
+                          color: personalizationC.gender == Gender.SECRET
+                              ? Colors.white
+                              : genderButtonInactiveStyle["textColor"],
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: 100),
-            ],
+                SizedBox(height: 100),
+              ],
+            ),
           ),
           FullWidthButtonBottomBar(
             context: context,
@@ -136,7 +139,6 @@ class GenderButton extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
             border: Border.all(color: this.style["borderColor"]),
             shape: BoxShape.circle,
@@ -146,6 +148,7 @@ class GenderButton extends StatelessWidget {
             onPressed: () {
               this.onPressed();
             },
+            padding: EdgeInsets.all(35),
             icon: Icon(this.icon),
             color: this.style["iconColor"],
             iconSize: 70,

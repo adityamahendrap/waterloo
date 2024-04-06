@@ -32,117 +32,120 @@ class SignUp extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          ListView(
+          SingleChildScrollView(
             padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
-            children: [
-              TextTitle(title: "Join Waterloo Today!✨"),
-              SizedBox(height: 10),
-              Text(
-                  "Create an account to track your water intake, set reminders, and unlock achievements"),
-              SizedBox(height: 25),
-              Form(
-                key: signUpC.signUpFormKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextTitle(title: "Join Waterloo Today!✨"),
+                SizedBox(height: 10),
+                Text(
+                    "Create an account to track your water intake, set reminders, and unlock achievements"),
+                SizedBox(height: 25),
+                Form(
+                  key: signUpC.signUpFormKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Email",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 10),
+                      _emailInput(),
+                      SizedBox(height: 20),
+                      Text(
+                        "Password",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 10),
+                      Obx(
+                        () => _passwordInput(),
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        "Confirm Password",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 10),
+                      Obx(
+                        () => _confirmPasswordInput(),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
-                      "Email",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: Obx(
+                        () => Checkbox(
+                          value: signUpC.isAgree.value,
+                          onChanged: (value) => signUpC.isAgree.toggle(),
+                          activeColor: Colors.blue,
+                        ),
+                      ),
                     ),
-                    SizedBox(height: 10),
-                    _emailInput(),
-                    SizedBox(height: 20),
-                    Text(
-                      "Password",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 10),
-                    Obx(
-                      () => _passwordInput(),
-                    ),
-                    SizedBox(height: 20),
-                    Text(
-                      "Confirm Password",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 10),
-                    Obx(
-                      () => _confirmPasswordInput(),
-                    ),
+                    SizedBox(width: 10),
+                    Text("I agree to Waterloo "),
+                    TextButton(
+                      onPressed: () {},
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all(EdgeInsets.zero),
+                      ),
+                      child: Text(
+                        "Terms & Conditions.",
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
                   ],
                 ),
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 24,
-                    width: 24,
-                    child: Obx(
-                      () => Checkbox(
-                        value: signUpC.isAgree.value,
-                        onChanged: (value) => signUpC.isAgree.toggle(),
-                        activeColor: Colors.blue,
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Already have an account?"),
+                    TextButton(
+                      onPressed: () => Get.off(() => SignIn()),
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all(EdgeInsets.zero),
                       ),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Text("I agree to Waterloo "),
-                  TextButton(
-                    onPressed: () {},
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.all(EdgeInsets.zero),
-                    ),
-                    child: Text(
-                      "Terms & Conditions.",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
+                      child: Text(
+                        "Sign In",
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Already have an account?"),
-                  TextButton(
-                    onPressed: () => Get.off(() => SignIn()),
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.all(EdgeInsets.zero),
-                    ),
-                    child: Text(
-                      "Sign In",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(height: 10),
-              HorizontalDivider(text: "or"),
-              SizedBox(height: 25),
-              OauthButton(
-                  iconPath: "assets/google_icon.png",
-                  text: "Continue with Google",
-                  onPressed: () => authC.google()),
-              SizedBox(height: 15),
-              OauthButton(
-                  iconPath: "assets/facebook_icon.png",
-                  text: "Continue with Facebook",
-                  onPressed: () => authC.facebook()),
-              SizedBox(height: 15),
-              OauthButton(
-                  iconPath: "assets/github_icon.png",
-                  text: "Continue with GitHub",
-                  onPressed: () => authC.github(context)),
-              SizedBox(height: 100),
-            ],
+                    )
+                  ],
+                ),
+                SizedBox(height: 10),
+                HorizontalDivider(text: "or"),
+                SizedBox(height: 25),
+                OauthButton(
+                    iconPath: "assets/google_icon.png",
+                    text: "Continue with Google",
+                    onPressed: () => authC.google()),
+                SizedBox(height: 15),
+                OauthButton(
+                    iconPath: "assets/facebook_icon.png",
+                    text: "Continue with Facebook",
+                    onPressed: () => authC.facebook()),
+                SizedBox(height: 15),
+                OauthButton(
+                    iconPath: "assets/github_icon.png",
+                    text: "Continue with GitHub",
+                    onPressed: () => authC.github(context)),
+                SizedBox(height: 100),
+              ],
+            ),
           ),
           FullWidthButtonBottomBar(
             context: context,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:waterloo/app/controllers/personalization_controller.dart';
 import 'package:waterloo/app/screens/personalization/8_weather.dart';
@@ -49,40 +50,43 @@ class ActicityLabelPersonalization extends StatelessWidget {
       appBar: AppBarPersonalization(step: 7),
       body: Stack(
         children: [
-          ListView(padding: EdgeInsets.fromLTRB(20, 30, 20, 20), children: [
-            Center(
-              child: TextTitle(
-                title: "What's your activity level?",
+          SingleChildScrollView(
+            padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
+            child: Column(children: [
+              Center(
+                child: TextTitle(
+                  title: "What's your activity level?",
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                "Understanding your activity is vital for crafting a personalized hydration plan. Pick the option that best describes your typical activity level.",
                 textAlign: TextAlign.center,
               ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              "Understanding your activity is vital for crafting a personalized hydration plan. Pick the option that best describes your typical activity level.",
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 40),
-            Column(
-              children: activityLevels.map((item) {
-                return Column(
-                  children: [
-                    ChoiceButton(
-                      iconPath: item['iconPath'],
-                      primaryText: item['primaryText'],
-                      secondaryText: item['secondaryText'],
-                      level: item['level'],
-                      selectedLevel: personalizationC.activityLevel,
-                      onPressed: () {
-                        personalizationC.activityLevel.value = item["level"];
-                      },
-                    ),
-                    SizedBox(height: 20)
-                  ],
-                );
-              }).toList(),
-            ),
-            SizedBox(height: 100),
-          ]),
+              SizedBox(height: 40),
+              Column(
+                children: activityLevels.map((item) {
+                  return Column(
+                    children: [
+                      ChoiceButton(
+                        iconPath: item['iconPath'],
+                        primaryText: item['primaryText'],
+                        secondaryText: item['secondaryText'],
+                        level: item['level'],
+                        selectedLevel: personalizationC.activityLevel,
+                        onPressed: () {
+                          personalizationC.activityLevel.value = item["level"];
+                        },
+                      ),
+                      SizedBox(height: 20)
+                    ],
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: 100),
+            ]),
+          ),
           FullWidthButtonBottomBar(
             context: context,
             text: "Continue",

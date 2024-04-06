@@ -36,38 +36,45 @@ class _EnterOtpCodeState extends State<EnterOtpCode> {
       ),
       body: Stack(
         children: [
-          ListView(
+          Padding(
             padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
-            children: [
-              TextTitle(title: "Enter OTP Code 🔐"),
-              SizedBox(height: 10),
-              Text(
-                  "We've sent an OTP code to your email. Please check your inbox and enter the code below."),
-              SizedBox(height: 25),
-              OtpTextField(
-                numberOfFields: 4,
-                showFieldAsBox: true,
-                onCodeChanged: (String code) {},
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                fieldWidth: MediaQuery.of(context).size.width / 5,
-                filled: true,
-                fillColor: Color.fromARGB(3, 0, 0, 0),
-                borderColor: Colors.white,
-                enabledBorderColor: Colors.white,
-                focusedBorderColor: Colors.blue,
-                cursorColor: Colors.blue,
-                autoFocus: true,
-                textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                onSubmit: (String verificationCode) {
-                  clog.debug('verificationCode: $verificationCode');
-                  clog.debug('email: ${Get.arguments['email']}');
-                  authC.verifyOTPCode(Get.arguments['email'], verificationCode);
-                },
-              ),
-              SizedBox(height: 25),
-              _isResendCodeButtonActive ? _resendButton() : _countdownResend(),
-              SizedBox(height: 100),
-            ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextTitle(title: "Enter OTP Code 🔐"),
+                SizedBox(height: 10),
+                Text(
+                    "We've sent an OTP code to your email. Please check your inbox and enter the code below."),
+                SizedBox(height: 25),
+                OtpTextField(
+                  numberOfFields: 4,
+                  showFieldAsBox: true,
+                  onCodeChanged: (String code) {},
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  fieldWidth: MediaQuery.of(context).size.width / 5,
+                  filled: true,
+                  fillColor: Color.fromARGB(3, 0, 0, 0),
+                  borderColor: Colors.white,
+                  enabledBorderColor: Colors.white,
+                  focusedBorderColor: Colors.blue,
+                  cursorColor: Colors.blue,
+                  autoFocus: true,
+                  textStyle:
+                      TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  onSubmit: (String verificationCode) {
+                    clog.debug('verificationCode: $verificationCode');
+                    clog.debug('email: ${Get.arguments['email']}');
+                    authC.verifyOTPCode(
+                        Get.arguments['email'], verificationCode);
+                  },
+                ),
+                SizedBox(height: 25),
+                _isResendCodeButtonActive
+                    ? _resendButton()
+                    : _countdownResend(),
+                SizedBox(height: 100),
+              ],
+            ),
           ),
           // FullWidthButtonBottomBar(
           //   context: context,
