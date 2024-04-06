@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:waterloo/app/screens/forgot_password/enter_otp_code.dart';
 import 'package:waterloo/app/screens/get_started.dart';
 import 'package:waterloo/app/screens/home.dart';
 import 'package:waterloo/app/screens/personalization/1_gender.dart';
 import 'package:waterloo/app/screens/walkthrough/introduction.dart';
 import 'package:waterloo/app/services/auth_service.dart';
-import 'package:waterloo/app/utils/AppSnackBar.dart';
+import 'package:waterloo/app/utils/app_snack_bar.dart';
+import 'package:waterloo/app/utils/go_go_exception.dart';
 
 // !! https://firebase.flutter.dev/docs/auth/social
 class AuthController extends GetxController {
@@ -108,7 +110,29 @@ class AuthController extends GetxController {
   }
 
   void _handleErr(dynamic e) {
-    AppSnackBar.error("Failed",
-        e is FirebaseAuthException ? e.message! : "Unknown error occurred");
+    switch (e.runtimeType) {
+      case FirebaseAuthException:
+        clog.error(e.toString());
+        AppSnackBar.error('Failed', e.message!);
+        break;
+      case GoGoException:
+        clog.error((e as GoGoException).toString());
+        AppSnackBar.error('Failed', e.message);
+        break;
+      default:
+        clog.error(e.toString());
+        AppSnackBar.error('Failed', 'Unknown error occurred');
+    }
+  }
+
+  void sendOTPCode(String email) async {
+    try {
+      await AuthService.forgotPasswordAccountCheck(email);
+      final otpCode = await AuthService.generateAndSaveOTPCode(email);
+      await AuthService.sendOTPCodeWithEmail(email, otpCode);
+      Get.off(EnterOtpCode());
+    } catch (e) {
+      _handleErr(e);
+    }
   }
 }

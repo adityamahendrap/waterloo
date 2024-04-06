@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:waterloo/app/controllers/base/auth_controller.dart';
 import 'package:waterloo/app/screens/personalization/1_gender.dart';
 import 'package:waterloo/app/services/auth_service.dart';
-import 'package:waterloo/app/utils/AppSnackBar.dart';
+import 'package:waterloo/app/utils/app_snack_bar.dart';
 
 class SignUpController extends GetxController {
   final authC = Get.find<AuthController>();

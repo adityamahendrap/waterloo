@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 class AppSnackBar {
   static SnackbarController error(String title, dynamic message) {
-    clog.error(message);
+    // clog.error(message);
     return Get.snackbar(
       title,
       message.toString(),
@@ -15,7 +15,7 @@ class AppSnackBar {
   }
 
   static SnackbarController success(String title, dynamic message) {
-    clog.info(message);
+    // clog.info(message);
     return Get.snackbar(
       title,
       message.toString(),

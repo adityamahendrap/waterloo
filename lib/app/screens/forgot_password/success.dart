@@ -11,36 +11,33 @@ class Success extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme()),
-      home: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: [
-            Center(
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset("assets/reset_password_success.png"),
-                    SizedBox(height: 30),
-                    TextTitle(title: "You're All Set!"),
-                    SizedBox(height: 15),
-                    Text("Your password successfully updated")
-                  ],
-                ),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        children: [
+          Center(
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset("assets/reset_password_success.png"),
+                  SizedBox(height: 30),
+                  TextTitle(title: "You're All Set!"),
+                  SizedBox(height: 15),
+                  Text("Your password successfully updated")
+                ],
               ),
             ),
-            FullWidthButtonBottomBar(
-              context: context,
-              text: "Go To Homepage",
-              onPressed: () {
-                Get.offAll(() => GetStarted());
-                Get.delete<PersonalizationController>(force: true);
-              },
-            ),
-          ],
-        ),
+          ),
+          FullWidthButtonBottomBar(
+            context: context,
+            text: "Go To Homepage",
+            onPressed: () {
+              Get.offAll(() => GetStarted());
+              Get.delete<PersonalizationController>(force: true);
+            },
+          ),
+        ],
       ),
     );
   }

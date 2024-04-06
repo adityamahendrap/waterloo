@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:waterloo/app/controllers/base/auth_controller.dart';
 import 'package:waterloo/app/controllers/sign_up_controller.dart';
 import 'package:waterloo/app/screens/sign_in.dart';
-import 'package:waterloo/app/utils/AppSnackBar.dart';
+import 'package:waterloo/app/utils/app_snack_bar.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
 import 'package:waterloo/app/widgets/horizontal_divider.dart';
 import 'package:waterloo/app/widgets/oauth_button.dart';

@@ -62,6 +62,7 @@ dependencies:
   flutter_native_splash: ^2.4.0
   flutter_keyboard_visibility: ^6.0.0
   syncfusion_flutter_datepicker: ^25.1.38
+  mailer: ^6.1.0
 
 dev_dependencies:
   flutter_test:
