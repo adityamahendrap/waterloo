@@ -22,6 +22,8 @@ class WaterController extends GetxController {
   final waterTodayHistory = Rxn<List<Map<String, dynamic>>>(); // drinks array in water collection
   final isWaterHistoryTodayExpanded = false.obs;
 
+  final editDrinkAmount = 0.0.obs;
+  final editDrinkDate = DateTime.now().obs;
   final editDrinkHour = 0.obs;
   final editDrinkMinute = 0.obs;
 

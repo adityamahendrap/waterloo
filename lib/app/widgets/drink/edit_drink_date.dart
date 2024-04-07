@@ -1,8 +1,12 @@
 import 'package:color_log/color_log.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:waterloo/app/controllers/base/water_controller.dart';
+import 'package:waterloo/app/utils/helpless.dart';
+import 'package:waterloo/app/widgets/drink/edit_drink_main.dart';
 import 'package:waterloo/app/widgets/full_width_button.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:waterloo/app/widgets/wrapper/bottom_sheet_fit_content_wrapper.dart';
 
 class EditDrinkDate extends StatefulWidget {
   late Map<String, dynamic> item;
@@ -17,6 +21,39 @@ class EditDrinkDate extends StatefulWidget {
 }
 
 class _EditDrinkDateState extends State<EditDrinkDate> {
+  final waterC = Get.find<WaterController>();
+  DateTime? tempDate;
+
+  @override
+  void initState() {
+    waterC.editDrinkDate.value = DateTime.parse(widget.item['datetime']);
+    tempDate = waterC.editDrinkDate.value;
+    super.initState();
+  }
+
+  void _okButtonOnPressed() {
+    Get.back();
+    bottomSheetFitContentWrapper(
+      context,
+      EditDrinkMain(
+        item: {
+          ...widget.item,
+          ...{
+            'datetime': HelplessUtil.changeDateInIso8601String(
+              widget.item['datetime'],
+              tempDate!,
+            ),
+          }
+        },
+      ),
+    );
+  }
+
+  void _backButtonOnPressed() {
+    Get.back();
+    bottomSheetFitContentWrapper(context, EditDrinkMain(item: widget.item));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -33,10 +70,10 @@ class _EditDrinkDateState extends State<EditDrinkDate> {
         SfDateRangePicker(
           backgroundColor: Colors.white,
           selectionMode: DateRangePickerSelectionMode.single,
-          // initialSelectedDate: DateTime.parse(widget.item['date']),
-          initialSelectedDate: DateTime.now(),
+          initialSelectedDate: DateTime.parse(widget.item['datetime']),
           onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
             clog.info('${args.value}');
+            tempDate = args.value;
           },
           headerStyle: DateRangePickerHeaderStyle(
             backgroundColor: Colors.transparent,
@@ -64,7 +101,7 @@ class _EditDrinkDateState extends State<EditDrinkDate> {
               child: FullWidthButton(
                 type: FullWidthButtonType.secondary,
                 text: "Back",
-                onPressed: () => Get.back(),
+                onPressed: () => _backButtonOnPressed(),
               ),
             ),
             SizedBox(width: 20),
@@ -72,10 +109,7 @@ class _EditDrinkDateState extends State<EditDrinkDate> {
               child: FullWidthButton(
                 type: FullWidthButtonType.primary,
                 text: "OK",
-                onPressed: () {
-                  clog.error('Unimplemented OK button');
-                  Get.back();
-                },
+                onPressed: () => _okButtonOnPressed(),
               ),
             )
           ],

@@ -28,6 +28,31 @@ class HelplessUtil {
     return DateFormat.Hm().format(dateTime);
   }
 
+  static int getHourFromIso8601String(String iso8601String) {
+    final DateTime dateTime = DateTime.parse(iso8601String);
+    return dateTime.hour;
+  }
+
+  static int getMinuteFromIso8601String(String iso8601String) {
+    final DateTime dateTime = DateTime.parse(iso8601String);
+    return dateTime.minute;
+  }
+
+  static changeHourMinuteInIso8601String(
+      String iso8601String, int hour, int minute) {
+    final DateTime dateTime = DateTime.parse(iso8601String);
+    final newDateTime = DateTime(dateTime.year, dateTime.month, dateTime.day,
+        hour, minute, dateTime.second);
+    return newDateTime.toIso8601String();
+  }
+
+  static changeDateInIso8601String(String iso8601String, DateTime date) {
+    final DateTime dateTime = DateTime.parse(iso8601String);
+    final newDateTime = DateTime(date.year, date.month, date.day, dateTime.hour,
+        dateTime.minute, dateTime.second);
+    return newDateTime.toIso8601String();
+  }
+
   static String getDateFromIso8601String(String iso8601String) {
     final DateTime dateTime = DateTime.parse(iso8601String);
     // Dec 20, 2021
