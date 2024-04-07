@@ -254,6 +254,78 @@ class WaterController extends GetxController {
 
     // if newdatetime is not in the same day
     clog.info('updating another day history');
+    this.deleteDrinkHistory(waterId, drinkId);
+
+    final user = box.read("auth");
+
+    Map<String, DateTime> day = HelplessUtil.getStartAndEndOfDay(newDatetime);
+
+    QuerySnapshot<Object?> dayExistingWaterSnapshot = await waters
+        .where("user_id", isEqualTo: user["uid"])
+        .where("datetime",
+            isGreaterThanOrEqualTo: day['startOfDay'],
+            isLessThanOrEqualTo: day['endOfDay'])
+        .limit(1)
+        .get();
+
+    Map<String, dynamic>? dayExistingWater;
+    if (dayExistingWaterSnapshot.docs.isNotEmpty) {
+      dayExistingWater =
+          dayExistingWaterSnapshot.docs[0].data() as Map<String, dynamic>;
+    }
+
+    if (dayExistingWater != null) {
+      final DrinkModel drinkModel = DrinkModel(
+        id: uuid.v4(),
+        amount: amount,
+        type: type,
+        datetime: newDatetime,
+      );
+
+      for (var drink in dayExistingWater["drinks"]) {
+        drink["datetime"] = (drink["datetime"] as Timestamp).toDate();
+      }
+      dayExistingWater["drinks"].add(drinkModel.toMap());
+      clog.debug("dayExistingWater: $dayExistingWater");
+
+      dayExistingWater["drinks"].sort((a, b) =>
+          (b["datetime"] as DateTime).compareTo((a["datetime"] as DateTime)));
+
+      await waters
+          .doc(dayExistingWaterSnapshot.docs[0].id)
+          .update(dayExistingWater)
+          .then((value) {
+        clog.info("water drinked in the same day");
+      }).catchError((error) {
+        clog.error("failed to update water: $error");
+        throw error;
+      });
+    } else {
+      final WaterModel waterModel = WaterModel(
+        id: uuid.v4(),
+        userId: user["uid"],
+        datetime: newDatetime,
+        drinks: [
+          DrinkModel(
+            id: uuid.v4(),
+            amount: amount,
+            type: type,
+            datetime: newDatetime,
+          )
+        ],
+      );
+      Map<String, dynamic> waterMap = waterModel.toMap();
+      print(waterMap);
+
+      await waters.add(waterMap).then((value) {
+        clog.info("new day started, water drinked");
+      }).catchError((error) {
+        clog.error("failed to add water: $error");
+        throw error;
+      });
+    }
+
+    AppSnackBar.success('Info', 'Drink updated');
   }
 }
 
