@@ -21,13 +21,11 @@ class EditDrinkDate extends StatefulWidget {
 }
 
 class _EditDrinkDateState extends State<EditDrinkDate> {
-  final waterC = Get.find<WaterController>();
-  DateTime? tempDate;
+  DateTime? date;
 
   @override
   void initState() {
-    waterC.editDrinkDate.value = DateTime.parse(widget.item['datetime']);
-    tempDate = waterC.editDrinkDate.value;
+    date = DateTime.parse(widget.item['datetime']);
     super.initState();
   }
 
@@ -41,7 +39,7 @@ class _EditDrinkDateState extends State<EditDrinkDate> {
           ...{
             'datetime': HelplessUtil.changeDateInIso8601String(
               widget.item['datetime'],
-              tempDate!,
+              date!,
             ),
           }
         },
@@ -102,7 +100,7 @@ class _EditDrinkDateState extends State<EditDrinkDate> {
       maxDate: DateTime.now(),
       onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
         clog.info('${args.value}');
-        tempDate = args.value;
+        date = args.value;
       },
       headerStyle: DateRangePickerHeaderStyle(
         backgroundColor: Colors.transparent,

@@ -7,7 +7,9 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:water_bottle/water_bottle.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:waterloo/app/utils/app_snack_bar.dart';
 import 'package:waterloo/app/utils/helpless.dart';
+import 'dart:developer';
 
 class WaterController extends GetxController {
   final isDrinking = false.obs;
@@ -19,11 +21,11 @@ class WaterController extends GetxController {
   final selectedCupAmount = 200.0.obs;
 
   final detailWaterToday = Rxn<Map<String, dynamic>>(); // water collection
-  final waterTodayHistory = Rxn<List<Map<String, dynamic>>>(); // drinks array in water collection
+  final waterTodayHistory =
+      Rxn<List<Map<String, dynamic>>>(); // drinks array in water collection
   final isWaterHistoryTodayExpanded = false.obs;
 
-  final editDrinkAmount = 0.0.obs;
-  final editDrinkDate = DateTime.now().obs;
+  // this 2 is necessary cz used in liswheelinput widget that need rx value
   final editDrinkHour = 0.obs;
   final editDrinkMinute = 0.obs;
 
@@ -197,6 +199,61 @@ class WaterController extends GetxController {
     clog.info('drink deleted');
 
     fetchTodayDrinkHistory();
+  }
+
+  Future<void> updateDrinkHistory(String waterId, String drinkId, double amount,
+      DateTime date, int hour, int minute, String type) async {
+    clog.debug('updateDrinkHistory');
+    await inspect({
+      'waterId': waterId,
+      'drinkId': drinkId,
+      'amount': amount,
+      'date': date,
+      'hour': hour,
+      'minute': minute,
+      'type': type,
+    });
+
+    final newDatetime = DateTime(date.year, date.month, date.day, hour, minute);
+    final DrinkModel drinkModel = DrinkModel(
+      id: drinkId,
+      amount: amount,
+      type: type,
+      datetime: newDatetime,
+    );
+    final drinkMap = drinkModel.toMap();
+
+    // check if newdatetime is in the same day
+    if (HelplessUtil.isSameDate(newDatetime, DateTime.now())) {
+      clog.info('updating today history');
+
+      final snapshot = await waters.where("id", isEqualTo: waterId).get();
+      final water = snapshot.docs.first.data() as Map<String, dynamic>;
+      final drinks = water["drinks"] as List;
+
+      for (var drink in drinks) {
+        drink["datetime"] = (drink["datetime"] as Timestamp).toDate();
+      }
+
+      final int index =
+          drinks.indexWhere((element) => element["id"] == drinkId);
+      drinks[index] = drinkMap;
+
+      clog.info('drinks: $drinks');
+
+      drinks.sort((a, b) => b["datetime"].compareTo(a["datetime"]));
+
+      water["drinks"] = drinks;
+      waters.doc(snapshot.docs.first.id).update(water);
+
+      fetchTodayDrinkHistory();
+      AppSnackBar.success('Info', 'Drink updated');
+
+      return;
+    }
+
+    // if newdatetime is not in the same day
+    clog.info('updating another day history');
   }
 }
 

@@ -8,6 +8,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:waterloo/app/constants/beverage_list.dart';
 import 'package:waterloo/app/controllers/base/water_controller.dart';
+import 'package:waterloo/app/utils/app_snack_bar.dart';
 import 'package:waterloo/app/utils/helpless.dart';
 import 'package:waterloo/app/widgets/drink/edit_drink_date.dart';
 import 'package:waterloo/app/widgets/drink/edit_drink_time.dart';
@@ -30,6 +31,7 @@ class _EditDrinkMainState extends State<EditDrinkMain> {
   TextEditingController _amountEditController =
       TextEditingController(text: "200");
   final _keyboardVisibilityController = KeyboardVisibilityController();
+  final waterC = Get.find<WaterController>();
 
   void _editDateOnPressed() {
     Get.back();
@@ -55,8 +57,15 @@ class _EditDrinkMainState extends State<EditDrinkMain> {
   }
 
   void _okButtonOnPressed() {
-    // TODO
-    clog.error('Unimplemented OK button');
+    waterC.updateDrinkHistory(
+      waterC.detailWaterToday.value!['id'],
+      widget.item['id'],
+      double.parse(_amountEditController.text),
+      (DateTime.parse(widget.item['datetime'])),
+      HelplessUtil.getHourFromIso8601String(widget.item['datetime']),
+      HelplessUtil.getMinuteFromIso8601String(widget.item['datetime']),
+      widget.item['type'],
+    );
     Get.back();
   }
 
