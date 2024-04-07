@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:uuid/uuid.dart';
 import 'package:color_log/color_log.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,8 +18,8 @@ class WaterController extends GetxController {
   final selectedCupType = 'Water'.obs;
   final selectedCupAmount = 200.0.obs;
 
-  final detailWaterToday = Rxn<Map<String, dynamic>>();
-  final waterTodayHistory = Rxn<List<Map<String, dynamic>>>();
+  final detailWaterToday = Rxn<Map<String, dynamic>>(); // water collection
+  final waterTodayHistory = Rxn<List<Map<String, dynamic>>>(); // drinks array in water collection
   final isWaterHistoryTodayExpanded = false.obs;
 
   final editDrinkHour = 0.obs;
@@ -27,12 +28,13 @@ class WaterController extends GetxController {
   final sphereBottleRef = GlobalKey<SphericalBottleState>();
   final box = GetStorage();
   CollectionReference waters = FirebaseFirestore.instance.collection('waters');
+  final uuid = Uuid();
 
   void setDailyGoal() {
     final user = box.read("auth");
     dailyGoal.value = user["daily_goal"] ?? 0.0;
   }
-  
+
   void switchCupSize(double amount, String type) {
     selectedCupType.value = type;
     selectedCupAmount.value = amount;
@@ -40,7 +42,7 @@ class WaterController extends GetxController {
     clog.debug("selectedCupAmount: ${selectedCupAmount.value}");
   }
 
-  Future<void> fetchWaterToday() async {
+  Future<void> fetchTodayDrinkHistory() async {
     final user = box.read("auth");
 
     Map<String, DateTime> day =
@@ -93,26 +95,26 @@ class WaterController extends GetxController {
     }
   }
 
-  void drinkWater(double amount) async {
+  void drink(double amount) async {
     isDrinking.value = true;
 
-    double target = this.waterLevel.value + (amount / this.dailyGoal.value);
+    double target = waterLevel.value + (amount / dailyGoal.value);
     const duration = const Duration(milliseconds: 100);
     Timer? timer;
     timer = Timer.periodic(duration, (Timer t) {
-      if (this.waterLevel.value >= 1) {
-        this.waterLevel.value = 1;
+      if (waterLevel.value >= 1) {
+        waterLevel.value = 1;
         timer?.cancel();
         isDrinking.value = false;
-      } else if (this.waterLevel.value >= target) {
+      } else if (waterLevel.value >= target) {
         timer?.cancel();
         isDrinking.value = false;
       } else {
-        this.waterLevel.value += 0.01;
-        sphereBottleRef.currentState?.waterLevel = this.waterLevel.value;
+        waterLevel.value += 0.01;
+        sphereBottleRef.currentState?.waterLevel = waterLevel.value;
       }
     });
-    this.currentWater.value += amount;
+    currentWater.value += amount;
 
     final user = box.read("auth");
 
@@ -138,6 +140,7 @@ class WaterController extends GetxController {
 
     if (todayExistingWater != null) {
       final DrinkModel drinkModel = DrinkModel(
+        id: uuid.v4(),
         amount: amount,
         type: selectedCupType.value,
         datetime: DateTime.now(),
@@ -156,10 +159,12 @@ class WaterController extends GetxController {
       });
     } else {
       final WaterModel waterModel = WaterModel(
+        id: uuid.v4(),
         userId: user["uid"],
         datetime: DateTime.now(),
         drinks: [
           DrinkModel(
+            id: uuid.v4(),
             amount: amount,
             type: selectedCupType.value,
             datetime: DateTime.now(),
@@ -177,22 +182,37 @@ class WaterController extends GetxController {
       });
     }
 
-    fetchWaterToday();
+    fetchTodayDrinkHistory();
+  }
+
+  void deleteDrinkHistory(String waterId, String drinkId) async {
+    final snapshot = await waters.where("id", isEqualTo: waterId).get();
+
+    final water = snapshot.docs.first.data() as Map<String, dynamic>;
+    water["drinks"].removeWhere((element) => element["id"] == drinkId);
+
+    waters.doc(snapshot.docs.first.id).update(water);
+    clog.info('drink deleted');
+
+    fetchTodayDrinkHistory();
   }
 }
 
 class DrinkModel {
+  late String id;
   late double amount;
   late String type;
   late DateTime datetime;
 
   DrinkModel({
+    required this.id,
     required this.amount,
     required this.type,
     required this.datetime,
   });
 
   DrinkModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     amount = json['amount'];
     type = json['type'];
     datetime = json['datetime'];
@@ -200,6 +220,7 @@ class DrinkModel {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'amount': amount,
       'type': type,
       'datetime': datetime,
@@ -208,11 +229,13 @@ class DrinkModel {
 }
 
 class WaterModel {
+  late String id;
   late String userId;
   late List<DrinkModel> drinks;
   late DateTime datetime;
 
   WaterModel({
+    required this.id,
     required this.userId,
     required this.drinks,
     required this.datetime,
@@ -222,6 +245,7 @@ class WaterModel {
     userId = json['user_id'];
     drinks = (json['drinks'] as List)
         .map((e) => DrinkModel(
+              id: e['id'],
               amount: e['amount'],
               type: e['type'],
               datetime: e['datetime'],
@@ -232,6 +256,7 @@ class WaterModel {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'user_id': userId,
       'drinks': drinks.map((e) => e.toMap()).toList(),
       'datetime': datetime,

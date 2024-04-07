@@ -10,6 +10,7 @@ import 'package:waterloo/app/constants/beverage_list.dart';
 import 'package:waterloo/app/controllers/nav_controller.dart';
 import 'package:waterloo/app/controllers/base/water_controller.dart';
 import 'package:waterloo/app/screens/cup_size/switch_cup_size.dart';
+import 'package:waterloo/app/utils/app_snack_bar.dart';
 import 'package:waterloo/app/utils/helpless.dart';
 import 'package:waterloo/app/widgets/drink/edit_drink_main.dart';
 import 'package:waterloo/app/widgets/full_width_button.dart';
@@ -34,7 +35,7 @@ class _HomeState extends State<Home> {
     super.initState();
 
     waterC.setDailyGoal();
-    waterC.fetchWaterToday();
+    waterC.fetchTodayDrinkHistory();
 
     // set water level UI default to 0
     WidgetsBinding.instance?.addPostFrameCallback((_) {
@@ -270,7 +271,9 @@ class _HomeState extends State<Home> {
                           bottomSheetFitContentWrapper(
                               context, EditDrinkMain(item: item));
                         } else {
-                          clog.error('Unimplemented delete function');
+                          waterC.deleteDrinkHistory(
+                              waterC.detailWaterToday.value!['id'], item["id"]);
+                          AppSnackBar.success('👻👻👻', 'Drink deleted');
                         }
                       },
                     ),
@@ -389,7 +392,7 @@ class _HomeState extends State<Home> {
                   () => ElevatedButton(
                     onPressed: () => waterC.isDrinking.value
                         ? null
-                        : waterC.drinkWater(waterC.selectedCupAmount.value),
+                        : waterC.drink(waterC.selectedCupAmount.value),
                     child: Text(
                       waterC.isDrinking.value
                           ? "Drinking..."

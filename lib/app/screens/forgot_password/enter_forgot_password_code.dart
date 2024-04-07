@@ -1,10 +1,7 @@
 import 'package:color_log/color_log.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:waterloo/app/controllers/base/auth_controller.dart';
-import 'package:waterloo/app/screens/forgot_password/update_forgotten_password.dart';
-import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:timer_count_down/timer_count_down.dart';
