@@ -67,32 +67,7 @@ class _EditDrinkDateState extends State<EditDrinkDate> {
         ),
         SizedBox(height: 15),
         Divider(thickness: 0.8),
-        SfDateRangePicker(
-          backgroundColor: Colors.white,
-          selectionMode: DateRangePickerSelectionMode.single,
-          initialSelectedDate: DateTime.parse(widget.item['datetime']),
-          onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-            clog.info('${args.value}');
-            tempDate = args.value;
-          },
-          headerStyle: DateRangePickerHeaderStyle(
-            backgroundColor: Colors.transparent,
-            textAlign: TextAlign.center,
-            textStyle: TextStyle(
-              color: Colors.blue,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          selectionTextStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-          selectionColor: Colors.blue,
-          todayHighlightColor: Colors.blue,
-          headerHeight: 50,
-        ),
+        _calendar(),
         Divider(thickness: 0.5),
         SizedBox(height: 20),
         Row(
@@ -116,6 +91,36 @@ class _EditDrinkDateState extends State<EditDrinkDate> {
         ),
         SizedBox(height: 20),
       ],
+    );
+  }
+
+  SfDateRangePicker _calendar() {
+    return SfDateRangePicker(
+      backgroundColor: Colors.white,
+      selectionMode: DateRangePickerSelectionMode.single,
+      initialSelectedDate: DateTime.parse(widget.item['datetime']),
+      maxDate: DateTime.now(),
+      onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
+        clog.info('${args.value}');
+        tempDate = args.value;
+      },
+      headerStyle: DateRangePickerHeaderStyle(
+        backgroundColor: Colors.transparent,
+        textAlign: TextAlign.center,
+        textStyle: TextStyle(
+          color: Colors.blue,
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      selectionTextStyle: TextStyle(
+        color: Colors.white,
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
+      selectionColor: Colors.blue,
+      todayHighlightColor: Colors.blue,
+      headerHeight: 50,
     );
   }
 }
