@@ -6,8 +6,8 @@ import 'package:waterloo/app/screens/get_started.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
 
-class Success extends StatelessWidget {
-  const Success({Key? key}) : super(key: key);
+class ForgotPasswordSolve extends StatelessWidget {
+  const ForgotPasswordSolve({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:waterloo/app/controllers/base/auth_controller.dart';
-import 'package:waterloo/app/screens/forgot_password/new_password.dart';
+import 'package:waterloo/app/screens/forgot_password/update_forgotten_password.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 
-class EnterOtpCode extends StatefulWidget {
-  EnterOtpCode({Key? key}) : super(key: key);
+class EnterForgotPasswordCode extends StatefulWidget {
+  EnterForgotPasswordCode({Key? key}) : super(key: key);
 
   @override
-  State<EnterOtpCode> createState() => _EnterOtpCodeState();
+  State<EnterForgotPasswordCode> createState() => _EnterForgotPasswordCodeState();
 }
 
-class _EnterOtpCodeState extends State<EnterOtpCode> {
+class _EnterForgotPasswordCodeState extends State<EnterForgotPasswordCode> {
   final authC = Get.find<AuthController>();
   bool _isResendCodeButtonActive = false;
 
@@ -76,13 +76,6 @@ class _EnterOtpCodeState extends State<EnterOtpCode> {
               ],
             ),
           ),
-          // FullWidthButtonBottomBar(
-          //   context: context,
-          //   text: "Submit",
-          //   onPressed: () {
-          //     Get.off(NewPassword());
-          //   },
-          // ),
         ],
       ),
     );

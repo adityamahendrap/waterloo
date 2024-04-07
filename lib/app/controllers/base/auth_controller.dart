@@ -5,9 +5,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:waterloo/app/screens/forgot_password/enter_otp_code.dart';
-import 'package:waterloo/app/screens/forgot_password/new_password.dart';
-import 'package:waterloo/app/screens/forgot_password/success.dart';
+import 'package:waterloo/app/screens/forgot_password/enter_forgot_password_code.dart';
+import 'package:waterloo/app/screens/forgot_password/update_forgotten_password.dart';
+import 'package:waterloo/app/screens/forgot_password/forgot_password_solve.dart';
 import 'package:waterloo/app/screens/get_started.dart';
 import 'package:waterloo/app/screens/home.dart';
 import 'package:waterloo/app/screens/personalization/1_gender.dart';
@@ -15,7 +15,6 @@ import 'package:waterloo/app/screens/walkthrough/introduction.dart';
 import 'package:waterloo/app/services/auth_service.dart';
 import 'package:waterloo/app/utils/app_snack_bar.dart';
 import 'package:waterloo/app/utils/go_go_exception.dart';
-import 'package:waterloo/app/widgets/loading.dart';
 
 // !! https://firebase.flutter.dev/docs/auth/social
 class AuthController extends GetxController {
@@ -138,6 +137,7 @@ class AuthController extends GetxController {
     }
   }
 
+  // !! NOT USED
   Future<void> sendOTPCode(String email) async {
     if (email.isEmpty) {
       AppSnackBar.error('Failed', 'Please fill the email field');
@@ -153,7 +153,7 @@ class AuthController extends GetxController {
       await AuthService.forgotPasswordAccountCheck(email);
       final otpCode = await AuthService.generateAndSaveOTPCode(email);
       await AuthService.sendOTPCodeWithEmail(email, otpCode);
-      Get.off(() => EnterOtpCode(), arguments: {'email': email});
+      Get.off(() => EnterForgotPasswordCode(), arguments: {'email': email});
     } catch (e) {
       _handleErr(e);
     } finally {
@@ -161,6 +161,7 @@ class AuthController extends GetxController {
     }
   }
 
+  // !! NOT USED
   Future<void> resendOTPCode(String email) async {
     EasyLoading.show();
     try {
@@ -175,11 +176,12 @@ class AuthController extends GetxController {
     }
   }
 
+  // !! NOT USED
   Future<void> verifyOTPCode(String email, String otpCode) async {
     EasyLoading.show();
     try {
       await AuthService.verifyOTPCode(email, otpCode);
-      Get.off(() => NewPassword(), arguments: {'email': email});
+      Get.off(() => UpdateForgottenPassword(), arguments: {'email': email});
     } catch (e) {
       _handleErr(e);
     } finally {
@@ -187,6 +189,7 @@ class AuthController extends GetxController {
     }
   }
 
+  // !! firebase can't update password without authentication
   void updatePassword(String email, String password, String newPassword) async {
     if (password != newPassword) {
       AppSnackBar.error('Failed', 'Passwords do not match');
@@ -199,9 +202,21 @@ class AuthController extends GetxController {
 
     EasyLoading.show();
     try {
-      // TODO
       // await AuthService.updatePassword(email, password);
-      Get.offAll(() => Success());
+      Get.offAll(() => ForgotPasswordSolve());
+    } catch (e) {
+      _handleErr(e);
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  Future<void> forgotPasswordFirebase(String email) async {
+    EasyLoading.show();
+    try {
+      await AuthService.forgotPasswordAccountCheck(email);
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      AppSnackBar.success('Success', 'Password reset email has been sent');
     } catch (e) {
       _handleErr(e);
     } finally {

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:waterloo/app/controllers/base/auth_controller.dart';
 import 'package:waterloo/app/controllers/sign_in_controller.dart';
-import 'package:waterloo/app/screens/forgot_password/send_otp_code.dart';
+import 'package:waterloo/app/screens/forgot_password/send_forgot_password_email.dart';
 import 'package:waterloo/app/screens/home.dart';
 import 'package:waterloo/app/screens/personalization/1_gender.dart';
 import 'package:waterloo/app/screens/sign_up.dart';
@@ -93,7 +93,7 @@ class SignIn extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        Get.to(() => SendOtpCode());
+                        Get.to(() => SendForgotPasswordEmail());
                       },
                       child: Text(
                         "Forgot Password?",

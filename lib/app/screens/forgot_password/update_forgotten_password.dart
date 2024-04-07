@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:waterloo/app/controllers/base/auth_controller.dart';
-import 'package:waterloo/app/screens/forgot_password/success.dart';
+import 'package:waterloo/app/screens/forgot_password/forgot_password_solve.dart';
 import 'package:waterloo/app/widgets/full_width_button_bottom_bar.dart';
 import 'package:waterloo/app/widgets/text_title.dart';
 
-class NewPassword extends StatefulWidget {
-  NewPassword({Key? key}) : super(key: key);
+class UpdateForgottenPassword extends StatefulWidget {
+  UpdateForgottenPassword({Key? key}) : super(key: key);
 
   @override
-  State<NewPassword> createState() => _NewPasswordState();
+  State<UpdateForgottenPassword> createState() => _UpdateForgottenPasswordState();
 }
 
-class _NewPasswordState extends State<NewPassword> {
+class _UpdateForgottenPasswordState extends State<UpdateForgottenPassword> {
   final _authC = Get.find<AuthController>();
 
   final _passwordController = TextEditingController();
