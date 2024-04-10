@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
+import 'package:water_bottle/water_bottle.dart';
 import 'package:waterloo/app/constants/beverage_list.dart';
 import 'package:waterloo/app/controllers/nav_controller.dart';
 import 'package:waterloo/app/controllers/base/water_controller.dart';
@@ -34,13 +35,22 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
-    waterC.setDailyGoal();
-    waterC.fetchTodayDrinkHistory();
-
-    // set water level UI default to 0
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      waterC.sphereBottleRef.currentState?.waterLevel = 0;
+      waterC.sphereBottleRef.currentState?.waterLevel = 0.0;
     });
+
+    waterC.setDailyGoal();
+    waterC.fetchTodayDrinkHistory().then(
+          (value) => WidgetsBinding.instance?.addPostFrameCallback(
+            (_) => initeWaterCounterState(),
+          ),
+        );
+  }
+
+  void initeWaterCounterState() {
+    waterC.waterLevel.value =
+        waterC.currentWater.value / waterC.dailyGoal.value;
+    waterC.sphereBottleRef.currentState?.waterLevel = waterC.waterLevel.value;
   }
 
   @override
@@ -273,7 +283,6 @@ class _HomeState extends State<Home> {
                         } else {
                           waterC.deleteDrinkHistory(
                               waterC.detailWaterToday.value!['id'], item["id"]);
-                          AppSnackBar.success('👻👻👻', 'Drink deleted');
                         }
                       },
                     ),
@@ -356,18 +365,18 @@ class _HomeState extends State<Home> {
                 padding: EdgeInsets.symmetric(
                   horizontal: MediaQuery.of(context).size.width * 0.2,
                 ),
-                // child: AspectRatio(
-                //   aspectRatio: 0.99,
-                //   child: SizedBox(
-                //     width: 100,
-                //     child: SphericalBottle(
-                //       key: waterC.sphereBottleRef,
-                //       waterColor: Colors.blue,
-                //       bottleColor: Colors.blue,
-                //       capColor: Colors.grey.shade700,
-                //     ),
-                //   ),
-                // ),
+                child: AspectRatio(
+                  aspectRatio: 0.99,
+                  child: SizedBox(
+                    width: 100,
+                    child: SphericalBottle(
+                      key: waterC.sphereBottleRef,
+                      waterColor: Colors.blue,
+                      bottleColor: Colors.blue,
+                      capColor: Colors.grey.shade700,
+                    ),
+                  ),
+                ),
               ),
             ),
             SizedBox(height: 20),

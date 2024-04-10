@@ -18,7 +18,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   ).then((FirebaseApp value) => Get.put(AuthController()));
-  FirebaseFirestore.instance;
+  FirebaseFirestore.instance.settings = Settings(persistenceEnabled: false);
   EasyLoading.instance
     ..indicatorWidget = Loading()
     ..loadingStyle = EasyLoadingStyle.light

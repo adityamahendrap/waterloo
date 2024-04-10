@@ -87,41 +87,80 @@ class WaterController extends GetxController {
       currentWater.value = tempCurrentWater;
 
       clog.debug("totalWaterToday: ${currentWater.value}");
-
-      // update sphere bottle water level UI
-      if (currentWater.value >= dailyGoal.value) {
-        waterLevel.value = 1;
-        sphereBottleRef.currentState?.waterLevel = waterLevel.value;
-      } else {
-        waterLevel.value = currentWater.value / dailyGoal.value;
-        sphereBottleRef.currentState?.waterLevel = waterLevel.value;
-      }
     }
   }
 
-  void drink(double amount) async {
-    isDrinking.value = true;
+  void updateWaterCounterUI(double bottlePercentage, double waterAmountML) {
+  isDrinking.value = true;
 
-    double target = waterLevel.value + (amount / dailyGoal.value);
-    const duration = const Duration(milliseconds: 100);
-    Timer? timer;
-    timer = Timer.periodic(duration, (Timer t) {
-      if (waterLevel.value >= 1) {
-        waterLevel.value = 1;
-        timer?.cancel();
-        isDrinking.value = false;
-      } else if (waterLevel.value >= target) {
+  clog.info("target water % in bottle: $bottlePercentage");
+  clog.info('target water amount: $waterAmountML');
+
+  double currentPercentage = waterLevel.value;
+  bool isDecreasing = bottlePercentage < currentPercentage;
+
+  currentWater.value = waterAmountML;
+
+  const baseDuration = const Duration(milliseconds: 100);
+  double distance = (bottlePercentage - currentPercentage).abs();
+  int intervals = (distance * 100).ceil(); 
+  Duration intervalDuration = baseDuration * (1 / intervals) * 5;
+
+  clog.info("distance: $distance");
+  clog.info("intervals: $intervals");
+  clog.info("intervalDuration: $intervalDuration");
+
+  clog.info('log:');
+
+  Timer? timer;
+  if (!isDecreasing) {
+    clog.info('increasing');
+    timer = Timer.periodic(intervalDuration, (Timer t) {
+      if (waterLevel.value >= bottlePercentage) {
         timer?.cancel();
         isDrinking.value = false;
       } else {
-        waterLevel.value += 0.01;
+        waterLevel.value += distance / intervals; // Use the actual distance
+        waterLevel.value = waterLevel.value.clamp(0.0, 1.0);
+        print(waterLevel.value);
         sphereBottleRef.currentState?.waterLevel = waterLevel.value;
       }
     });
-    currentWater.value += amount;
+  } else {
+    clog.info('decreasing');
+    timer = Timer.periodic(intervalDuration, (Timer t) {
+      if (waterLevel.value <= bottlePercentage || waterLevel.value <= 0.0) {
+        timer?.cancel();
+        isDrinking.value = false;
+      } else {
+        waterLevel.value -= distance / intervals; // Use the actual distance
+        waterLevel.value = waterLevel.value.clamp(0.0, 1.0);
+        print(waterLevel.value);
+        sphereBottleRef.currentState?.waterLevel = waterLevel.value;
+      }
+    });
+  }
+}
+
+
+  double calculateBottlePercentage(double amount) {
+    clog.info("waterLevel ${waterLevel.value}");
+    return waterLevel.value + (amount / dailyGoal.value);
+  }
+
+  double calculateTotalWaterAmount(double change) {
+    clog.info("currentWater: ${currentWater.value}");
+    return currentWater.value + change;
+  }
+
+  void drink(double amount) async {
+    double totalWaterAmount = calculateTotalWaterAmount(amount);
+    double percentage = calculateBottlePercentage(amount);
+    // clog.info("totalWaterAmount: $totalWaterAmount");
+    // clog.info("percentage: $percentage");
+    updateWaterCounterUI(percentage, totalWaterAmount);
 
     final user = box.read("auth");
-
     Map<String, DateTime> day =
         HelplessUtil.getStartAndEndOfDay(DateTime.now());
 
@@ -139,8 +178,8 @@ class WaterController extends GetxController {
           todayExistingWaterSnapshot.docs[0].data() as Map<String, dynamic>;
     }
 
-    clog.debug("${todayExistingWater}");
-    clog.debug("todayExistingWater: $todayExistingWater");
+    // clog.debug("${todayExistingWater}");
+    // clog.debug("todayExistingWater: $todayExistingWater");
 
     if (todayExistingWater != null) {
       final DrinkModel drinkModel = DrinkModel(
@@ -193,10 +232,23 @@ class WaterController extends GetxController {
     final snapshot = await waters.where("id", isEqualTo: waterId).get();
 
     final water = snapshot.docs.first.data() as Map<String, dynamic>;
+    final removedDrink =
+        water["drinks"].firstWhere((element) => element["id"] == drinkId)
+            as Map<String, dynamic>;
     water["drinks"].removeWhere((element) => element["id"] == drinkId);
 
     waters.doc(snapshot.docs.first.id).update(water);
-    clog.info('drink deleted');
+    // clog.info('drink deleted');
+
+    double totalWaterAmount =
+        calculateTotalWaterAmount(-(removedDrink["amount"] as double));
+    // clog.info(
+    //     "totalWaterAmount: ${-(removedDrink["amount"] as double)}, $totalWaterAmount");
+    double percentage =
+        calculateBottlePercentage(-(removedDrink["amount"] as double));
+    // clog.info(
+    //     "percentage: ${-(removedDrink["amount"] as double)}, $percentage");
+    updateWaterCounterUI(percentage, totalWaterAmount);
 
     fetchTodayDrinkHistory();
   }
