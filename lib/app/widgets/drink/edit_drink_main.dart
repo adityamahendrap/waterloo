@@ -8,6 +8,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:waterloo/app/constants/beverage_list.dart';
 import 'package:waterloo/app/controllers/base/water_controller.dart';
+import 'package:waterloo/app/controllers/history_controller.dart';
 import 'package:waterloo/app/utils/app_snack_bar.dart';
 import 'package:waterloo/app/utils/helpless.dart';
 import 'package:waterloo/app/widgets/drink/edit_drink_date.dart';
@@ -17,11 +18,9 @@ import 'package:waterloo/app/widgets/wrapper/bottom_sheet_fit_content_wrapper.da
 
 class EditDrinkMain extends StatefulWidget {
   late Map<String, dynamic> item;
+  late bool? isFromHistoryScreen = false;
 
-  EditDrinkMain({
-    super.key,
-    required this.item,
-  });
+  EditDrinkMain({super.key, required this.item, this.isFromHistoryScreen});
 
   @override
   State<EditDrinkMain> createState() => _EditDrinkMainState();
@@ -32,6 +31,7 @@ class _EditDrinkMainState extends State<EditDrinkMain> {
       TextEditingController(text: "200");
   final _keyboardVisibilityController = KeyboardVisibilityController();
   final waterC = Get.find<WaterController>();
+  final historyC = Get.find<HistoryController>();
 
   void _editDateOnPressed() {
     Get.back();
@@ -56,8 +56,10 @@ class _EditDrinkMainState extends State<EditDrinkMain> {
     );
   }
 
-  void _okButtonOnPressed() {
-    waterC.updateDrinkHistory(
+  void _okButtonOnPressed() async {
+    Get.back();
+
+    await waterC.updateDrinkHistory(
       waterC.detailWaterToday.value!['id'],
       widget.item['id'],
       double.parse(_amountEditController.text),
@@ -66,7 +68,10 @@ class _EditDrinkMainState extends State<EditDrinkMain> {
       HelplessUtil.getMinuteFromIso8601String(widget.item['datetime']),
       widget.item['type'],
     );
-    Get.back();
+
+    if (widget.isFromHistoryScreen!) {
+      await historyC.fetchDrinkHistory();
+    }
   }
 
   @override

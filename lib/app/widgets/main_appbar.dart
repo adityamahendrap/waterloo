@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:waterloo/app/controllers/base/auth_controller.dart';
+import 'package:waterloo/app/screens/history/history.dart';
+import 'package:waterloo/app/screens/home.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -118,11 +120,11 @@ class MenuItem {
 }
 
 abstract class MenuItems {
-  static const List<MenuItem> firstItems = [home];
+  static const List<MenuItem> firstItems = [home, history];
   static const List<MenuItem> secondItems = [logout];
 
   static const home = MenuItem(text: 'Home', icon: Icons.home_outlined);
-  static const share = MenuItem(text: 'Share', icon: Icons.share);
+  static const history = MenuItem(text: 'History', icon: Icons.history);
   static const settings = MenuItem(text: 'Settings', icon: Icons.settings);
   static const logout = MenuItem(text: 'Log Out', icon: Icons.logout);
 
@@ -147,12 +149,12 @@ abstract class MenuItems {
 
   static void onChanged(BuildContext context, MenuItem item) {
     switch (item) {
-      // case MenuItems.home:
-      //   break;
-      // case MenuItems.settings:
-      //   break;
-      // case MenuItems.share:
-      //   break;
+      case MenuItems.home:
+        Get.off(() => Home());
+        break;
+      case MenuItems.history:
+        Get.off(() => History());
+        break;
       case MenuItems.logout:
         AuthController().logout();
         break;

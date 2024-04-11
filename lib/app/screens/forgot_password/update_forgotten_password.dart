@@ -23,6 +23,13 @@ class _UpdateForgottenPasswordState extends State<UpdateForgottenPassword> {
   bool _isConfirmPasswordVisible = false;
 
   @override
+  void dispose() {
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,

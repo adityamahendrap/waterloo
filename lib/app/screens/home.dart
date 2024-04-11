@@ -8,9 +8,12 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:water_bottle/water_bottle.dart';
 import 'package:waterloo/app/constants/beverage_list.dart';
+import 'package:waterloo/app/controllers/base/persistent_nav_controller.dart';
+import 'package:waterloo/app/controllers/history_controller.dart';
 import 'package:waterloo/app/controllers/nav_controller.dart';
 import 'package:waterloo/app/controllers/base/water_controller.dart';
 import 'package:waterloo/app/screens/cup_size/switch_cup_size.dart';
+import 'package:waterloo/app/screens/history/history.dart';
 import 'package:waterloo/app/utils/app_snack_bar.dart';
 import 'package:waterloo/app/utils/helpless.dart';
 import 'package:waterloo/app/widgets/drink/edit_drink_main.dart';
@@ -28,8 +31,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final navC = Get.put(NavController());
-  final waterC = Get.put(WaterController());
+  final navC = Get.put(NavController(), permanent: true);
+  final waterC = Get.put(WaterController(), permanent: true);
+  final historyC = Get.put(HistoryController());
 
   @override
   void initState() {
@@ -42,12 +46,12 @@ class _HomeState extends State<Home> {
     waterC.setDailyGoal();
     waterC.fetchTodayDrinkHistory().then(
           (value) => WidgetsBinding.instance?.addPostFrameCallback(
-            (_) => initeWaterCounterState(),
+            (_) => initWaterCounterState(),
           ),
         );
   }
 
-  void initeWaterCounterState() {
+  void initWaterCounterState() {
     waterC.waterLevel.value =
         waterC.currentWater.value / waterC.dailyGoal.value;
     waterC.sphereBottleRef.currentState?.waterLevel = waterC.waterLevel.value;
@@ -74,45 +78,6 @@ class _HomeState extends State<Home> {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: _bottomNavBar(),
-    );
-  }
-
-  Widget _bottomNavBar() {
-    return Obx(
-      () => BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: navC.selectedIndex.value,
-        selectedItemColor: Colors.blue,
-        onTap: (index) => navC.selectedIndex.value = index,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-            activeIcon: Icon(Icons.home_filled),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history_outlined),
-            label: 'History',
-            activeIcon: Icon(Icons.history),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.report_outlined),
-            label: 'Report',
-            activeIcon: Icon(Icons.report),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.emoji_events_outlined),
-            label: 'Achievements',
-            activeIcon: Icon(Icons.emoji_events),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle_outlined),
-            label: 'Account',
-            activeIcon: Icon(Icons.account_circle),
-          ),
-        ],
       ),
     );
   }
@@ -365,18 +330,18 @@ class _HomeState extends State<Home> {
                 padding: EdgeInsets.symmetric(
                   horizontal: MediaQuery.of(context).size.width * 0.2,
                 ),
-                child: AspectRatio(
-                  aspectRatio: 0.99,
-                  child: SizedBox(
-                    width: 100,
-                    child: SphericalBottle(
-                      key: waterC.sphereBottleRef,
-                      waterColor: Colors.blue,
-                      bottleColor: Colors.blue,
-                      capColor: Colors.grey.shade700,
-                    ),
-                  ),
-                ),
+                // child: AspectRatio(
+                //   aspectRatio: 0.99,
+                //   child: SizedBox(
+                //     width: 100,
+                //     child: SphericalBottle(
+                //       key: waterC.sphereBottleRef,
+                //       waterColor: Colors.blue,
+                //       bottleColor: Colors.blue,
+                //       capColor: Colors.grey.shade700,
+                //     ),
+                //   ),
+                // ),
               ),
             ),
             SizedBox(height: 20),

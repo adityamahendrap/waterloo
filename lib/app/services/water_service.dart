@@ -30,6 +30,16 @@ class WaterService {
     return null;
   }
 
+  Future<List<Object?>> getWaters({userId, DateTime? start, DateTime? end}) async {
+    final snapshot = await waters
+        .where("user_id", isEqualTo: userId)
+        .where("datetime", isGreaterThanOrEqualTo: start)
+        .where("datetime", isLessThanOrEqualTo: end)
+        .get();
+
+    return snapshot.docs.map((e) => e.data()).toList();
+  }
+
   Future<void> addDrink({String? userId, double? amount, String? type}) async {
     Map<String, DateTime> day =
         HelplessUtil.getStartAndEndOfDay(DateTime.now());

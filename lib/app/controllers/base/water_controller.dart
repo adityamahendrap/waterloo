@@ -165,7 +165,7 @@ class WaterController extends GetxController {
     fetchTodayDrinkHistory();
   }
 
-  void deleteDrinkHistory(String waterId, String drinkId) async {
+  Future<void> deleteDrinkHistory(String waterId, String drinkId) async {
     final deletedDrink = await waterService.deleteDrink(
       waterId: waterId,
       drinkId: drinkId,

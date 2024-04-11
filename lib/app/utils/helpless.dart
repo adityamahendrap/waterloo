@@ -19,6 +19,10 @@ class HelplessUtil {
     };
   }
 
+  static String getDateFromDateTime(DateTime dateTime) {
+    return DateFormat('y-M-d').format(dateTime);
+  }
+
   static String timestampToIso8601String(Timestamp timestamp) {
     return timestamp.toDate().toIso8601String();
   }
