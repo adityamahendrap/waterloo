@@ -1,6 +1,7 @@
-# waterloo
+# Waterloo
 
-Water Tracker & Reminder Mobile App
+[WIP] Water Tracker Mobile App\
+Still broken on most part 💀💀
 
 ## Getting Started
 
